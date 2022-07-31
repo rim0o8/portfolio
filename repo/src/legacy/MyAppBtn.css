@@ -1,0 +1,22 @@
+.Btn {
+    border: 1px solid aquamarine;
+    margin: 12px;
+    border-radius: 4px;
+    width: 600px;
+    background-color: #fafbfd;
+    box-shadow: 1px 2px 5px 3px rgba(0,0,0,.1);
+    padding: 4px 2px;
+}
+
+.Btn-title {
+    font-size: 18px;
+    margin: 0 8px 4px;
+    text-align: left;
+    padding: 4px 8px;
+    text-align: center;
+}
+
+.Btn-description {
+    word-wrap: break-word;
+    padding: 8px;
+  }
