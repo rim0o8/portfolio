@@ -10,7 +10,7 @@ class Contact extends Component {
 
         return (
             <div>
-                <div className="Btn-title">{mail}</div>
+                <a href="mailto:{mail}">{mail}</a>
                 <div className="Btn-title">{phone}</div>
             </div>
         );

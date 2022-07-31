@@ -21,7 +21,7 @@ class AffiliationBtn extends Component {
             <button className="Btn" onClick={openWindow}>
                 <img className="logo" src={logo_src}></img>
                 <div className="Btn-title">{title}</div>
-                <b>position: {position}</b>
+                <b>{position}</b>
                 <div className="Btn-description">{description}</div>
             </button>
         );

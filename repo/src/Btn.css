@@ -43,3 +43,10 @@
     word-wrap: break-word;
     padding: 8px;
 }
+
+a {
+    color: #fafbfd;
+}
+a:hover {
+    color: #4169e1;
+}

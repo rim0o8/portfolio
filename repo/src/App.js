@@ -72,7 +72,7 @@ function App() {
         <h3>Contact</h3>
         <Contact
           mail="kurashimayuuri@gmail.com"
-          phone="090-2269-5777"
+          phone=""
         />
       </body>
     </div>
