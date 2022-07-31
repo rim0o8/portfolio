@@ -2,7 +2,7 @@
     border: 1px solid aquamarine;
     margin: 12px;
     border-radius: 4px;
-    width: 600px;
+    width: 400px;
     background-color: #fafbfd;
     box-shadow: 1px 2px 5px 3px rgba(0,0,0,.1);
     padding: 4px 2px;
@@ -42,4 +42,4 @@
 .Btn-description {
     word-wrap: break-word;
     padding: 8px;
-  }
+}
