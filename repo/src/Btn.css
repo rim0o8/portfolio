@@ -8,9 +8,22 @@
     padding: 4px 2px;
 }
 
+.Btn:hover {
+    background-color: #4169e1;
+}
+
 .logo {
     width: 100px;
     height: 100px;
+    border-radius: 50%;
+    margin: 12px;
+    background-color: #fafbfd;
+    box-shadow: 1px 2px 5px 3px rgba(0,0,0,.1);
+}
+
+.large-logo {
+    width: 300px;
+    height: 300px;
     border-radius: 50%;
     margin: 12px;
     background-color: #fafbfd;

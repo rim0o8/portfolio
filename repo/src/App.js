@@ -10,13 +10,14 @@ function App() {
     <div className="App">
       <body className="App-header">
         <h2>Yuuri Kurashima</h2>
+        <img className="large-logo" src="./yuuri_kurashima.png"></img>
         Keywords: NLP, ML
         <h3>Summary</h3>
         <h3>My Apps</h3>
         <div>
           <MyAppBtn
             logo_src="animal_shogi.webp"
-            title="動物将棋"
+            title="どうぶつしょうぎ"
             link="https://rim0o8.github.io/animal_shogi-page/AnimalShogi.html"
             description="2019.7に個人制作"
           />
@@ -41,13 +42,14 @@ function App() {
             description="微分幾何学を研究"
           />
           <AffiliationBtn
-              logo_src="./elyza.jpeg"
+              logo_src="./elyza.png"
               title="ELYZA.inc"
               link="https://elyza.ai/"
               position="NLP AI ENGINEER"
               description="2021~"
           />
         </div>
+        <h3>History</h3>
         <h3>Accounts</h3>
         <div>
           <SNSLink
