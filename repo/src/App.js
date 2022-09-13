@@ -21,14 +21,14 @@ function App() {
             description="2019.7に個人制作。プログラミング始めたばかりの頃に作ったやつで、出来が悪いのはご容赦お願いします。"
           />
           <MyAppBtn
-              title="NLPの何か"
+              title="NLPサービス"
               link="https://apple.com"
-              description="作りたいなあって思ってる"
+              description="構想段階"
           />
           <MyAppBtn
               title="お店でQR読み込んだらメニューになるやつ"
               link="https://meta.com"
-              description="今作ってる"
+              description="高校の友人と製作中。骨格まではできている。"
           />
         </div>
         <h3>Affiliation</h3>
@@ -46,6 +46,13 @@ function App() {
               link="https://elyza.ai/"
               position="NLP AI ENGINEER Intern"
               description="NLP, ML, RetailTech, Crawling"
+          />
+          <AffiliationBtn
+              logo_src="./virufy.jpeg"
+              title="Virufy"
+              link="https://virufy.org/ja/"
+              position="MLOps ENGINEER"
+              description="ML"
           />
         </div>
         <h3>Accounts</h3>
