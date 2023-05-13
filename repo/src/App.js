@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 import './App.css';
 import MyAppBtn from "./MyAppBtn.js"
 import AffiliationBtn from "./AffiliationBtn.js"
@@ -10,7 +9,7 @@ function App() {
     <div className="App">
       <body className="App-header">
         <h2>Yuuri Kurashima</h2>
-        <img className="large-logo" src="./img/yuuri.png"></img>
+        <img className="large-logo" src="./img/yuuri_kurashima.jpg" alt=""></img>
         Keywords: NLP, ML
         <h3>My Apps</h3>
         <div>
