@@ -18,17 +18,7 @@ function App() {
             logo_src="animal_shogi.webp"
             title="どうぶつしょうぎ"
             link="https://rim0o8.github.io/animal_shogi-page/AnimalShogi.html"
-            description="2019.7に個人制作。プログラミング始めたばかりの頃に作ったやつで、出来が悪いのはご容赦お願いします。"
-          />
-          <MyAppBtn
-              title="NLPサービス"
-              link="https://apple.com"
-              description="構想段階"
-          />
-          <MyAppBtn
-              title="お店でQR読み込んだらメニューになるやつ"
-              link="https://meta.com"
-              description="高校の友人と製作中。骨格まではできている。"
+            description="2019.7にプログラミングを学びたての時にVue.jsの勉強のため個人制作"
           />
         </div>
         <h3>Affiliation</h3>
