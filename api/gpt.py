@@ -24,12 +24,12 @@ class Spokesman:
             for i, question in enumerate(_data['Unnamed: 1'].to_list()[1:])
         ]
 
-        self.messages = [{"role": "system", "content": f'{name}という人物に成り切ってください。あなたは人事担当者などからの質問に対して{name}の代わりに誠実な回答を行います。'}]
-
         self.vectorizer = spacy.load('ja_core_news_md')
         self.personal_data_length = personal_data_length
+        self.name = name
 
     def completion(self, message: str):
+        messages = [{"role": "system", "content": f'{self.name}という人物に成り切ってください。あなたは人事担当者などからの質問に対して{self.name}の代わりに誠実な回答を行います。'}]
         personal_data = self.extract_personal_data(message)
         prompt = f"""{personal_data}
         上記のデータをもとに、以下の質問に論理的かつ魅力的に答えてください。
@@ -39,16 +39,19 @@ class Spokesman:
 
         質問：{message}
         """
-        self.messages.append({"role": "user", "content": prompt})
+        messages.append({"role": "user", "content": prompt})
 
-        result = openai.ChatCompletion.create(
+        for resp in openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
-            messages=self.messages,
-            max_tokens=1024
-        )
-        response_message = {"role": "assistant", "content": result.choices[0].message.content}
-        self.messages.append(response_message)
-        return response_message
+            messages=messages,
+            max_tokens=1024,
+            stream=True,
+        ):
+            if 'content' in resp.choices[0].delta:
+                print(resp.choices[0].delta['content'])
+                yield resp.choices[0].delta['content']
+            else:
+                continue
 
     def cos_similarity(self, text1: str, text2: str):
         vec1 = self.vectorizer(text1)
@@ -68,14 +71,17 @@ class Spokesman:
 
             similarity_ranks.append({'id': i, 'values': [q_sim + a0_sim, q_sim + a1_sim, q_sim + a2_sim]})
 
-        while len(extracted) < self.personal_data_length:
+        while True:
             sorted_similarity_ranks = sorted(similarity_ranks, key=lambda x: max(x['values']), reverse=True)
 
             idx = sorted_similarity_ranks[0]['id']
             values = sorted_similarity_ranks[0]['values']
             ans_id = values.index(max(values))
 
-            extracted += self.personal_data[ans_id]['answers'][ans_id] + '[SEP]'
+            if len(extracted) < self.personal_data_length:
+                extracted += self.personal_data[ans_id]['answers'][ans_id] + '[SEP]'
+            else:
+                break
         extracted = extracted.strip('[SEP]')
         return extracted
 
