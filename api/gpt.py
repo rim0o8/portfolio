@@ -1,35 +1,43 @@
-import os
 import math
+import os
 from pathlib import Path
 from typing import List
-import openai
-import spacy
-import pandas as pd
 
-OPENAI_API_KEY = os.environ['OPENAI_API_KEY']
+import openai
+import pandas as pd
+import spacy
+
+OPENAI_API_KEY = os.environ["OPENAI_API_KEY"]
 
 
 class Spokesman:
-    def __init__(self, database_path: Path, name: str = '倉島悠吏', personal_data_length=512):
+    def __init__(
+        self, database_path: Path, name: str = "倉島悠吏", personal_data_length=512
+    ):
         _data = dict(pd.read_csv(database_path))
         self.personal_data = [
             {
-                'question': question,
-                'answers': [
-                    self.nan2None(_data['Unnamed: 2'].to_list()[1:][i]),
-                    self.nan2None(_data['Unnamed: 3'].to_list()[1:][i]),
-                    self.nan2None(_data['Unnamed: 4'].to_list()[1:][i]),
-                ]
+                "question": question,
+                "answers": [
+                    self.nan2None(_data["Unnamed: 2"].to_list()[1:][i]),
+                    self.nan2None(_data["Unnamed: 3"].to_list()[1:][i]),
+                    self.nan2None(_data["Unnamed: 4"].to_list()[1:][i]),
+                ],
             }
-            for i, question in enumerate(_data['Unnamed: 1'].to_list()[1:])
+            for i, question in enumerate(_data["Unnamed: 1"].to_list()[1:])
         ]
 
-        self.vectorizer = spacy.load('ja_core_news_md')
+        self.vectorizer = spacy.load("ja_core_news_md")
         self.personal_data_length = personal_data_length
         self.name = name
 
     def completion(self, message: str):
-        messages = [{"role": "system", "content": f'{self.name}という人物に成り切ってください。あなたは人事担当者などからの質問に対して{self.name}の代わりに誠実な回答を行います。'}]
+        messages = [
+            {
+                "role": "system",
+                "content": f"{self.name}という人物に成り切ってください。あなたは人事担当者などからの質問に対して{self.name}の代わりに誠実な回答を行います。",
+            }
+        ]
         personal_data = self.extract_personal_data(message)
         prompt = f"""{personal_data}
         上記のデータをもとに、以下の質問に論理的かつ魅力的に答えてください。
@@ -47,9 +55,9 @@ class Spokesman:
             max_tokens=1024,
             stream=True,
         ):
-            if 'content' in resp.choices[0].delta:
-                print(resp.choices[0].delta['content'])
-                yield resp.choices[0].delta['content']
+            if "content" in resp.choices[0].delta:
+                print(resp.choices[0].delta["content"])
+                yield resp.choices[0].delta["content"]
             else:
                 continue
 
@@ -60,29 +68,33 @@ class Spokesman:
         return vec1.similarity(vec2)
 
     def extract_personal_data(self, message: str):
-        extracted = ''
+        extracted = ""
         similarity_ranks = []
         for i in range(len(self.personal_data)):
-            answers = self.personal_data[i]['answers']
-            q_sim = self.cos_similarity(message, self.personal_data[i]['question'])
+            answers = self.personal_data[i]["answers"]
+            q_sim = self.cos_similarity(message, self.personal_data[i]["question"])
             a0_sim = self.cos_similarity(message, answers[0]) if answers[0] else -1
             a1_sim = self.cos_similarity(message, answers[1]) if answers[1] else -1
             a2_sim = self.cos_similarity(message, answers[2]) if answers[2] else -1
 
-            similarity_ranks.append({'id': i, 'values': [q_sim + a0_sim, q_sim + a1_sim, q_sim + a2_sim]})
+            similarity_ranks.append(
+                {"id": i, "values": [q_sim + a0_sim, q_sim + a1_sim, q_sim + a2_sim]}
+            )
 
         while True:
-            sorted_similarity_ranks = sorted(similarity_ranks, key=lambda x: max(x['values']), reverse=True)
+            sorted_similarity_ranks = sorted(
+                similarity_ranks, key=lambda x: max(x["values"]), reverse=True
+            )
 
-            idx = sorted_similarity_ranks[0]['id']
-            values = sorted_similarity_ranks[0]['values']
+            idx = sorted_similarity_ranks[0]["id"]
+            values = sorted_similarity_ranks[0]["values"]
             ans_id = values.index(max(values))
 
             if len(extracted) < self.personal_data_length:
-                extracted += self.personal_data[ans_id]['answers'][ans_id] + '[SEP]'
+                extracted += self.personal_data[ans_id]["answers"][ans_id] + "[SEP]"
             else:
                 break
-        extracted = extracted.strip('[SEP]')
+        extracted = extracted.strip("[SEP]")
         return extracted
 
     def nan2None(self, text: str):
