@@ -4,13 +4,128 @@ import AffiliationBtn from "./AffiliationBtn.js"
 import Contact from "./Contact.js"
 import SNSLink from "./SNSLink.js"
 
+import React, { useState } from 'react';
+import axios from "axios";
+
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import Typography from '@mui/material/Typography';
+import CircularProgress from '@mui/material/CircularProgress';
+
 function App() {
+  const [inputValue, setInputValue] = useState('');  // 入力値を保持するステート
+  const [curQuestion, setCurQuestion] = useState(null);  // 入力値を保持するステート
+  const [apiData, setApiData] = useState(null);  // APIから受信したデータを保持するステート
+  const [isLoading, setIsLoading] = useState(false);  // データ取得中を示すステート
+
+  // テキストボックスの入力値が変更された時の処理
+  const handleChange = event => {
+    setInputValue(event.target.value);
+  };
+
+  // 送信ボタンがクリックされた時の処理
+  const handleSubmit = async event => {
+    event.preventDefault();  // ページのリロードを防
+    setIsLoading(true);
+    setCurQuestion(inputValue);
+    setInputValue('');  // テキストボックスを空にする
+    setApiData('');  // APIから受信したデータを空にする
+
+    try {
+      const formdata = new FormData()
+      formdata.append('text', inputValue)
+      const response = await fetch(
+        'http://127.0.0.1:8000/aboutme', {
+          method: 'POST',
+          headers: {
+            'accept': '*/*',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ text: inputValue }),
+        }
+      );
+
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder('utf-8');
+
+        reader.read().then(function processText({ done, value }) {
+          if (done) {
+            console.log('Stream finished');
+            return;
+          }
+
+          setApiData(prevData => prevData + decoder.decode(value));
+          return reader.read().then(processText);
+        });
+    } catch (error) {
+      console.error('Error:', error);
+    }
+    setIsLoading(false);  // ローディング状態を終了
+  };
+
   return (
     <div className="App">
       <body className="App-header">
         <h2>Yuuri Kurashima</h2>
         <img className="large-logo" src="./img/yuuri_kurashima.jpg" alt=""></img>
         Keywords: NLP, ML
+        <h3>Spokesman</h3>
+        倉島悠吏について、AIエージェントがご質問にお答えいたします。<br />
+        ご質問いただいた内容は、OpenAIに送信されますので、ご注意ください。<br />
+        一方で、ご質問内容のログは倉島のサーバーには保持されませんので、お気軽にご質問ください。<br />
+        誤った内容や不自然な内容をお返しする場合がございます。ご了承ください。
+        （ex: 開発歴について教えてください）
+        <br /><br />
+        <Box
+          component="form"
+          onSubmit={handleSubmit}
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: 2,  // ボックス間のスペース
+          }}
+        >
+          <TextField
+            variant="outlined"
+            value={inputValue}
+            onChange={handleChange}
+            label="Your Input"
+            sx={{
+              backgroundColor: '#fff',  // テキストフィールドの背景色を白に設定
+            }}
+          />
+          <Button
+            variant="contained"
+            type="submit"
+            color="primary"
+          >
+            送信
+          </Button>
+        </Box>
+        {curQuestion !== null && (
+          <Card variant="outlined" sx={{ mt: 3 }}>
+            <CardContent>
+              <Typography variant="body2" style={{ color: 'red' }}>
+                質問　{curQuestion}
+              </Typography>
+            </CardContent>
+          </Card>
+        )}
+        {apiData !== null && (
+          <Card variant="outlined" sx={{ mt: 3 }}>
+            <CardContent>
+              <Typography variant="body2">
+                {apiData}
+              </Typography>
+            </CardContent>
+          </Card>
+        )}
+
+
         <h3>My Apps</h3>
         <div>
           <MyAppBtn
