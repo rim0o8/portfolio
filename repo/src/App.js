@@ -4,8 +4,7 @@ import AffiliationBtn from "./AffiliationBtn.js"
 import Contact from "./Contact.js"
 import SNSLink from "./SNSLink.js"
 
-import React, { useState } from 'react';
-import axios from "axios";
+import React, { useState, useEffect } from 'react';
 
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
@@ -15,7 +14,14 @@ import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
 
+import ReactGA from "react-ga4";
+
 function App() {
+  useEffect(() => {
+    ReactGA.initialize("G-THFX69N9EX");
+    ReactGA.send("pageview");
+  }, []);
+
   const [inputValue, setInputValue] = useState('');  // 入力値を保持するステート
   const [curQuestion, setCurQuestion] = useState(null);  // 入力値を保持するステート
   const [apiData, setApiData] = useState(null);  // APIから受信したデータを保持するステート
@@ -33,6 +39,12 @@ function App() {
     setCurQuestion(inputValue);
     setInputValue('');  // テキストボックスを空にする
     setApiData('');  // APIから受信したデータを空にする
+
+    ReactGA.event({
+      category: "Form",
+      action: "Submit question",
+      label: inputValue
+    });
 
     try {
       const formdata = new FormData()
@@ -74,8 +86,7 @@ function App() {
         Keywords: NLP, ML
         <h3>Spokesman</h3>
         倉島悠吏について、AIエージェントがご質問にお答えいたします。<br />
-        ご質問いただいた内容は、OpenAIに送信されますので、ご注意ください。<br />
-        一方で、ご質問内容のログは倉島のサーバーには保持されませんので、お気軽にご質問ください。<br />
+        ご質問内容は、本AIの改善に使用されます。<br />
         誤った内容や不自然な内容をお返しする場合がございます。ご了承ください。
         （ex: 開発歴について教えてください）
         <br /><br />
@@ -141,25 +152,25 @@ function App() {
             logo_src="./img/TokyoUniversityOfScience.png"
             title="東京理科大学"
             link="https://www.tus.ac.jp/"
-            position="田中真紀子研究室"
-            description="理工学研究科数学専攻M1, リー群を基盤とした研究"
+            position="創域理工学研究科数理科学専攻M2, 田中真紀子研究室"
+            description="微分幾何学において、等質空間（全ての点が同様の性質の空間）はリー群（連続的対称性を持つ数学的構造）の性質を探索する手段を与えます。統計的対象もリー群と見做せ、この手法を用いて新たな性質の探索を行います"
           />
           <AffiliationBtn
               logo_src="./img/elyza.png"
               title="ELYZA.inc"
               link="https://elyza.ai/"
-              position="NLP AI ENGINEER Intern"
-              description="NLP, ML, RetailTech, Crawling"
+              position="Project Scope Lead AI ENGINEER"
+              description="最大手の大手人材・広告企業とのPoCプロジェクトにおいて、日本語の大規模言語生成モデル「ELYZA Pencil」の性能改善に取り組み、1年以上に渡り継続的に成果を出し、クライアントの業務効率化に貢献しました。"
           />
           <AffiliationBtn
               logo_src="./img/virufy.jpeg"
               title="Virufy"
               link="https://virufy.org/ja/"
-              position="MLOps ENGINEER"
-              description="ML"
+              position="Japan Project Manager | MLOps ENGINEER"
+              description="12箇所のPCR検査場/病院/待機ホテルと連携し、日本人の咳の音声データを収集するプロジェクトを管理。0から20名規模のチームを立ち上げる。また、MLOps Engineerとして、SageMaker Neoでモデルの最適化に取り組む"
           />
         </div>
-        <h3>Accounts</h3>
+        <h3>Connect with me</h3>
         <div>
           <SNSLink
             link="https://github.com/rim0o8"
