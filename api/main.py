@@ -33,7 +33,7 @@ spokesman = Spokesman(Path("job_hunt_sheet.csv"))
 
 
 @app.post(
-    "/aboutme",
+    "/api/aboutme",
     response_class=StreamingResponse,
 )
 async def aboutme(record: Question):
