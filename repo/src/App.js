@@ -159,7 +159,7 @@ function App() {
               description="12箇所のPCR検査場/病院/待機ホテルと連携し、日本人の咳の音声データを収集するプロジェクトを管理。0から20名規模のチームを立ち上げる。また、MLOps Engineerとして、SageMaker Neoでモデルの最適化に取り組む"
           />
         </div>
-        <h3>Accounts</h3>
+        <h3>Connect with me</h3>
         <div>
           <SNSLink
             link="https://github.com/rim0o8"
