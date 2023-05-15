@@ -40,6 +40,7 @@ class Spokesman:
                 },
             }
             for i, question in enumerate(_data["Unnamed: 1"].to_list()[1:])
+            if self.nan2None(_data["Unnamed: 2"].to_list()[1:][i]) or self.nan2None(_data["Unnamed: 3"].to_list()[1:][i]) or self.nan2None(_data["Unnamed: 4"].to_list()[1:][i])
         ]
 
         self.vectorizer = spacy.load("ja_core_news_md")
@@ -90,9 +91,9 @@ class Spokesman:
                 "values": {
                     "q": self.cos_similarity(message, self.personal_data[i]["question"]['embeddings']),
                     "answers": {
-                        0: self.cos_similarity(message, answers[0]['embeddings']) if answers[0] else -1,
-                        1: self.cos_similarity(message, answers[1]['embeddings']) if answers[1] else -1,
-                        2: self.cos_similarity(message, answers[2]['embeddings']) if answers[2] else -1,
+                        0: self.cos_similarity(message, answers[0]['embeddings']) if answers[0] else -2,
+                        1: self.cos_similarity(message, answers[1]['embeddings']) if answers[1] else -2,
+                        2: self.cos_similarity(message, answers[2]['embeddings']) if answers[2] else -2,
                     }
                 }
             })
