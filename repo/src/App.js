@@ -65,9 +65,9 @@ function App() {
 
         reader.read().then(function processText({ done, value }) {
           if (done) {
-            console.log('Stream finished');
             return;
           }
+          setIsLoading(false);  // ローディング状態を終了
 
           setApiData(prevData => prevData + decoder.decode(value));
           return reader.read().then(processText);
@@ -75,7 +75,6 @@ function App() {
     } catch (error) {
       console.error('Error:', error);
     }
-    setIsLoading(false);  // ローディング状態を終了
   };
 
   return (
