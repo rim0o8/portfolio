@@ -4,8 +4,7 @@ import AffiliationBtn from "./AffiliationBtn.js"
 import Contact from "./Contact.js"
 import SNSLink from "./SNSLink.js"
 
-import React, { useState } from 'react';
-import axios from "axios";
+import React, { useState, useEffect } from 'react';
 
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
@@ -15,7 +14,14 @@ import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
 
+import ReactGA from "react-ga4";
+
 function App() {
+  useEffect(() => {
+    ReactGA.initialize("G-THFX69N9EX");
+    ReactGA.send("pageview");
+  }, []);
+
   const [inputValue, setInputValue] = useState('');  // 入力値を保持するステート
   const [curQuestion, setCurQuestion] = useState(null);  // 入力値を保持するステート
   const [apiData, setApiData] = useState(null);  // APIから受信したデータを保持するステート
@@ -33,6 +39,12 @@ function App() {
     setCurQuestion(inputValue);
     setInputValue('');  // テキストボックスを空にする
     setApiData('');  // APIから受信したデータを空にする
+
+    ReactGA.event({
+      category: "Form",
+      action: "Submit question",
+      label: inputValue
+    });
 
     try {
       const formdata = new FormData()
