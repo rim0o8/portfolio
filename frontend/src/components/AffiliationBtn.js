@@ -1,7 +1,7 @@
 // 新しいtabでlinkを開くボタン
 
 import React, { Component } from 'react';
-import './Btn.css';
+import '../style/Btn.css';
 
 class AffiliationBtn extends Component {
     render() {

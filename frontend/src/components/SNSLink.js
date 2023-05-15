@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import './SNSLink.css';
-import { replace_no_img } from './utils';
-import exportFunction from "./utils"
+import '../style/SNSLink.css';
+import { replace_no_img } from '../utils';
+import exportFunction from "../utils"
 
 class SNSLink extends Component {
 
