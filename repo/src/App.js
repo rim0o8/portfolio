@@ -117,6 +117,8 @@ function App() {
             送信
           </Button>
         </Box>
+        <br />
+        {isLoading && <CircularProgress />}
         {curQuestion !== null && (
           <Card variant="outlined" sx={{ mt: 3 }}>
             <CardContent>
