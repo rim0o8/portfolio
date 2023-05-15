@@ -18,11 +18,11 @@ class Spokesman:
         self.personal_data = [
             {
                 "question": question,
-                "answers": [
-                    self.nan2None(_data["Unnamed: 2"].to_list()[1:][i]),
-                    self.nan2None(_data["Unnamed: 3"].to_list()[1:][i]),
-                    self.nan2None(_data["Unnamed: 4"].to_list()[1:][i]),
-                ],
+                "answers": {
+                    0: self.nan2None(_data["Unnamed: 2"].to_list()[1:][i]),
+                    1: self.nan2None(_data["Unnamed: 3"].to_list()[1:][i]),
+                    2: self.nan2None(_data["Unnamed: 4"].to_list()[1:][i]),
+                },
             }
             for i, question in enumerate(_data["Unnamed: 1"].to_list()[1:])
         ]
@@ -72,23 +72,28 @@ class Spokesman:
         similarity_ranks = []
         for i in range(len(self.personal_data)):
             answers = self.personal_data[i]["answers"]
-            q_sim = self.cos_similarity(message, self.personal_data[i]["question"])
-            a0_sim = self.cos_similarity(message, answers[0]) if answers[0] else -1
-            a1_sim = self.cos_similarity(message, answers[1]) if answers[1] else -1
-            a2_sim = self.cos_similarity(message, answers[2]) if answers[2] else -1
-
             similarity_ranks.append(
-                {"id": i, "values": [q_sim + a0_sim, q_sim + a1_sim, q_sim + a2_sim]}
+                {
+                    "id": i,
+                    "values": {
+                        "q": self.cos_similarity(message, self.personal_data[i]["question"]),
+                        "answers": {
+                            0: self.cos_similarity(message, answers[0]) if answers[0] else -1,
+                            1: self.cos_similarity(message, answers[1]) if answers[1] else -1,
+                            2: self.cos_similarity(message, answers[2]) if answers[2] else -1,
+                        }
+                    }
+                }
             )
 
         sorted_similarity_ranks = sorted(
-            similarity_ranks, key=lambda x: max(x["values"]), reverse=True
+            similarity_ranks, key=lambda x: x["values"]['q'], reverse=True
         )
         while True:
             row = sorted_similarity_ranks.pop(0)
             idx = row["id"]
-            values = row["values"]
-            ans_id = values.index(max(values))
+            answers = row["values"]['answers']
+            ans_id = max(answers, key=answers.get)
 
             print(self.personal_data[idx]["question"])
             new_text = f'「{self.personal_data[idx]["question"]}」に対する回答：{self.personal_data[idx]["answers"][ans_id]}[SEP]'
