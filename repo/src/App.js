@@ -38,7 +38,7 @@ function App() {
       const formdata = new FormData()
       formdata.append('text', inputValue)
       const response = await fetch(
-        'http://127.0.0.1:8000/aboutme', {
+        'http://rim0o8.com/api/aboutme', {
           method: 'POST',
           headers: {
             'accept': '*/*',
