@@ -1,7 +1,7 @@
 import math
 import os
 from pathlib import Path
-from typing import List, Optional
+from typing import List, Optional, Dict, Union
 
 import openai
 import pandas as pd
@@ -21,37 +21,20 @@ class Spokesman:
         self.personal_data = self.build_database(database_path)
         self.generate_max_tokens = generate_max_tokens
 
-    def build_database(self, database_path):
+    def build_database(self, database_path) -> List[Dict[str, Union[str, List[int]]]]:
         df = pd.read_csv(database_path)
-        _data = dict(
-            df.where(df.notnull(), None)
-        )
-        return [
-            {
-                "question": {
-                    "text": question,
-                    "embeddings": self.get_embedding(question),
-                },
-                "answers": {
-                    0: {
-                        "text": _data["Unnamed: 2"].to_list()[1:][i],
-                        "embeddings": self.get_embedding(_data["Unnamed: 2"].to_list()[1:][i]),
-                    },
-                    1: {
-                        "text": _data["Unnamed: 3"].to_list()[1:][i],
-                        "embeddings": self.get_embedding(_data["Unnamed: 3"].to_list()[1:][i]),
-                    },
-                    2: {
-                        "text": _data["Unnamed: 4"].to_list()[1:][i],
-                        "embeddings": self.get_embedding(_data["Unnamed: 4"].to_list()[1:][i]),
-                    },
-                },
-            }
-            for i, question in enumerate(_data["Unnamed: 1"].to_list()[1:])
-            if _data["Unnamed: 2"].to_list()[1:][i]
-            or _data["Unnamed: 3"].to_list()[1:][i]
-            or _data["Unnamed: 4"].to_list()[1:][i]
-        ]
+        df = df.iloc[1:]
+        df = df.where(df.notnull(), None)
+        df = df[df[["Unnamed: 2", "Unnamed: 3", "Unnamed: 4"]].notnull().any(axis=1)]
+
+        def build_dict(row):
+            question = row["Unnamed: 1"]
+            answers = {i: {"text": row[f"Unnamed: {i+2}"], "embeddings": self.get_embedding(row[f"Unnamed: {i+2}"])} for i in range(3)}
+            return {"question": {"text": question, "embeddings": self.get_embedding(question)}, "answers": answers}
+
+        output = df.apply(build_dict, axis=1).tolist()
+
+        return output
 
     def get_embedding(self, text: Optional[str]):
         if text is None:
@@ -77,6 +60,7 @@ class Spokesman:
 
         質問：{message}
         """
+        print(prompt)
         messages.append({"role": "user", "content": prompt})
 
         for resp in openai.ChatCompletion.create(
@@ -104,7 +88,7 @@ class Spokesman:
                 {
                     "id": i,
                     "values": {
-                        "q": self.cos_similarity(
+                        "question": self.cos_similarity(
                             message_embeddings, self.personal_data[i]["question"]["embeddings"]
                         ),
                         "answers": {
@@ -118,7 +102,7 @@ class Spokesman:
 
         extracted = ""
         sorted_similarity_ranks = sorted(
-            similarity_ranks, key=lambda x: x["values"]["q"], reverse=True
+            similarity_ranks, key=lambda x: x["values"]["question"], reverse=True
         )
         while True:
             row = sorted_similarity_ranks.pop(0)
