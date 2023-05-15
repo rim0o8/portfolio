@@ -13,7 +13,7 @@ OPENAI_API_KEY = os.environ['OPENAI_API_KEY']
 class Spokesman:
     def __init__(
         self, database_path: Path, name: str = '倉島悠吏', personal_data_length=1024, embeddings_engine: str = 'text-embedding-ada-002', completion_engine: str = 'gpt-3.5-turbo', generate_max_tokens: int = 1024
-    ):
+    ) -> None:
         self.name = name
         self.personal_data_length = personal_data_length
         self.embeddings_engine = embeddings_engine
@@ -21,13 +21,13 @@ class Spokesman:
         self.personal_data = self.build_database(database_path)
         self.generate_max_tokens = generate_max_tokens
 
-    def build_database(self, database_path) -> List[Dict[str, Union[str, List[int]]]]:
+    def build_database(self, database_path) -> List[Dict[str,Dict[str, Union[str, List[int]]]]]:
         df = pd.read_csv(database_path)
         df = df.iloc[1:]
         df = df.where(df.notnull(), None)
         df = df[df[['Unnamed: 2', 'Unnamed: 3', 'Unnamed: 4']].notnull().any(axis=1)]
 
-        def build_dict(row):
+        def build_dict(row) -> Dict[str, Dict[str, Union[str, int]]]:
             question = row['Unnamed: 1']
             answers = {i: {'text': row[f'Unnamed: {i+2}'], 'embeddings': self.get_embedding(row[f'Unnamed: {i+2}'])} for i in range(3)}
             return {'question': {'text': question, 'embeddings': self.get_embedding(question)}, 'answers': answers}
@@ -36,7 +36,7 @@ class Spokesman:
 
         return output
 
-    def get_embedding(self, text: Optional[str]):
+    def get_embedding(self, text: Optional[str]) -> Optional[List[int]]:
         if text is None:
             return None
         return get_embedding(
@@ -44,7 +44,7 @@ class Spokesman:
             engine=self.embeddings_engine
         )
 
-    def completion(self, message: str):
+    def completion(self, message: str) -> str:
         messages = [
             {
                 'role': 'system',
@@ -74,12 +74,12 @@ class Spokesman:
             else:
                 continue
 
-    def cos_similarity(self, embeddings1: List[int], embeddings2: List[int]):
+    def cos_similarity(self, embeddings1: List[int], embeddings2: List[int]) -> int:
         if not embeddings1 or not embeddings2:
             return -2
         return cosine_similarity(embeddings1, embeddings2)
 
-    def extract_personal_data(self, message: str):
+    def extract_personal_data(self, message: str) -> str:
         similarity_ranks = []
         message_embeddings = self.get_embedding(message)
         for i in range(len(self.personal_data)):
