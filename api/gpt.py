@@ -81,16 +81,17 @@ class Spokesman:
                 {"id": i, "values": [q_sim + a0_sim, q_sim + a1_sim, q_sim + a2_sim]}
             )
 
+        sorted_similarity_ranks = sorted(
+            similarity_ranks, key=lambda x: max(x["values"]), reverse=True
+        )
         while True:
-            sorted_similarity_ranks = sorted(
-                similarity_ranks, key=lambda x: max(x["values"]), reverse=True
-            )
-
-            idx = sorted_similarity_ranks[0]["id"]
-            values = sorted_similarity_ranks[0]["values"]
+            row = sorted_similarity_ranks.pop(0)
+            idx = row["id"]
+            values = row["values"]
             ans_id = values.index(max(values))
 
-            new_text = f"「{self.personal_data[idx]["question"]}」に対する回答：{self.personal_data[idx]["answers"][ans_id]}[SEP]"
+            print(self.personal_data[idx]["question"])
+            new_text = f'「{self.personal_data[idx]["question"]}」に対する回答：{self.personal_data[idx]["answers"][ans_id]}[SEP]'
             if len(extracted) + len(new_text) < self.personal_data_length:
                 extracted += new_text
             else:
