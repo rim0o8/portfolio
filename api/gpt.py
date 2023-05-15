@@ -6,8 +6,7 @@ from typing import List
 import openai
 import pandas as pd
 import spacy
-
-from openai.embeddings_utils import get_embedding, cosine_similarity
+from openai.embeddings_utils import cosine_similarity, get_embedding
 
 OPENAI_API_KEY = os.environ["OPENAI_API_KEY"]
 
@@ -22,25 +21,44 @@ class Spokesman:
                 "id": i,
                 "question": {
                     "text": question,
-                    "embeddings": get_embedding(question, engine='text-embedding-ada-002')
+                    "embeddings": get_embedding(
+                        question, engine="text-embedding-ada-002"
+                    ),
                 },
                 "answers": {
                     0: {
-                        'text': self.nan2None(_data["Unnamed: 2"].to_list()[1:][i]),
-                        'embeddings': get_embedding(self.nan2None(_data["Unnamed: 2"].to_list()[1:][i]), engine='text-embedding-ada-002')
-                    } if self.nan2None(_data["Unnamed: 2"].to_list()[1:][i]) else None,
+                        "text": self.nan2None(_data["Unnamed: 2"].to_list()[1:][i]),
+                        "embeddings": get_embedding(
+                            self.nan2None(_data["Unnamed: 2"].to_list()[1:][i]),
+                            engine="text-embedding-ada-002",
+                        ),
+                    }
+                    if self.nan2None(_data["Unnamed: 2"].to_list()[1:][i])
+                    else None,
                     1: {
-                        'text': self.nan2None(_data["Unnamed: 3"].to_list()[1:][i]),
-                        'embeddings': get_embedding(self.nan2None(_data["Unnamed: 3"].to_list()[1:][i]), engine='text-embedding-ada-002')
-                    } if self.nan2None(_data["Unnamed: 3"].to_list()[1:][i]) else None,
+                        "text": self.nan2None(_data["Unnamed: 3"].to_list()[1:][i]),
+                        "embeddings": get_embedding(
+                            self.nan2None(_data["Unnamed: 3"].to_list()[1:][i]),
+                            engine="text-embedding-ada-002",
+                        ),
+                    }
+                    if self.nan2None(_data["Unnamed: 3"].to_list()[1:][i])
+                    else None,
                     2: {
-                        'text': self.nan2None(_data["Unnamed: 4"].to_list()[1:][i]),
-                        'embeddings': get_embedding(self.nan2None(_data["Unnamed: 4"].to_list()[1:][i]), engine='text-embedding-ada-002')
-                    } if self.nan2None(_data["Unnamed: 4"].to_list()[1:][i]) else None,
+                        "text": self.nan2None(_data["Unnamed: 4"].to_list()[1:][i]),
+                        "embeddings": get_embedding(
+                            self.nan2None(_data["Unnamed: 4"].to_list()[1:][i]),
+                            engine="text-embedding-ada-002",
+                        ),
+                    }
+                    if self.nan2None(_data["Unnamed: 4"].to_list()[1:][i])
+                    else None,
                 },
             }
             for i, question in enumerate(_data["Unnamed: 1"].to_list()[1:])
-            if self.nan2None(_data["Unnamed: 2"].to_list()[1:][i]) or self.nan2None(_data["Unnamed: 3"].to_list()[1:][i]) or self.nan2None(_data["Unnamed: 4"].to_list()[1:][i])
+            if self.nan2None(_data["Unnamed: 2"].to_list()[1:][i])
+            or self.nan2None(_data["Unnamed: 3"].to_list()[1:][i])
+            or self.nan2None(_data["Unnamed: 4"].to_list()[1:][i])
         ]
 
         self.vectorizer = spacy.load("ja_core_news_md")
@@ -78,7 +96,7 @@ class Spokesman:
                 continue
 
     def cos_similarity(self, text: str, embeddings: str):
-        text_embeddings = get_embedding(text, engine='text-embedding-ada-002')
+        text_embeddings = get_embedding(text, engine="text-embedding-ada-002")
 
         return cosine_similarity(text_embeddings, embeddings)
 
@@ -86,29 +104,39 @@ class Spokesman:
         similarity_ranks = []
         for i in range(len(self.personal_data)):
             answers = self.personal_data[i]["answers"]
-            similarity_ranks.append({
-                'id': i,
-                "values": {
-                    "q": self.cos_similarity(message, self.personal_data[i]["question"]['embeddings']),
-                    "answers": {
-                        0: self.cos_similarity(message, answers[0]['embeddings']) if answers[0] else -2,
-                        1: self.cos_similarity(message, answers[1]['embeddings']) if answers[1] else -2,
-                        2: self.cos_similarity(message, answers[2]['embeddings']) if answers[2] else -2,
-                    }
+            similarity_ranks.append(
+                {
+                    "id": i,
+                    "values": {
+                        "q": self.cos_similarity(
+                            message, self.personal_data[i]["question"]["embeddings"]
+                        ),
+                        "answers": {
+                            0: self.cos_similarity(message, answers[0]["embeddings"])
+                            if answers[0]
+                            else -2,
+                            1: self.cos_similarity(message, answers[1]["embeddings"])
+                            if answers[1]
+                            else -2,
+                            2: self.cos_similarity(message, answers[2]["embeddings"])
+                            if answers[2]
+                            else -2,
+                        },
+                    },
                 }
-            })
+            )
 
         extracted = ""
         sorted_similarity_ranks = sorted(
-            similarity_ranks, key=lambda x: x["values"]['q'], reverse=True
+            similarity_ranks, key=lambda x: x["values"]["q"], reverse=True
         )
         while True:
             row = sorted_similarity_ranks.pop(0)
             idx = row["id"]
-            answers = row["values"]['answers']
+            answers = row["values"]["answers"]
             ans_id = max(answers, key=answers.get)
 
-            print(self.personal_data[idx]["question"]['text'])
+            print(self.personal_data[idx]["question"]["text"])
             new_text = f'「{self.personal_data[idx]["question"]["text"]}」に対する回答：{self.personal_data[idx]["answers"][ans_id]["text"]}[SEP]'
             if len(extracted) + len(new_text) < self.personal_data_length:
                 extracted += new_text
