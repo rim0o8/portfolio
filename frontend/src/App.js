@@ -1,8 +1,8 @@
-import './App.css';
-import MyAppBtn from "./MyAppBtn.js"
-import AffiliationBtn from "./AffiliationBtn.js"
-import Contact from "./Contact.js"
-import SNSLink from "./SNSLink.js"
+import './style/App.css';
+import MyAppBtn from "./components/MyAppBtn.js"
+import AffiliationBtn from "./components/AffiliationBtn.js"
+import Contact from "./components/Contact.js"
+import SNSLink from "./components/SNSLink.js"
 
 import React, { useState, useEffect } from 'react';
 
@@ -82,10 +82,12 @@ function App() {
         <img className="large-logo" src="./img/yuuri_kurashima.jpg" alt=""></img>
         Keywords: NLP, ML
         <h3>Spokesman</h3>
+        <font size="4">
         倉島悠吏について、AIエージェントがご質問にお答えいたします。<br />
         ご質問内容は、本AIの改善に使用されます。<br />
         誤った内容や不自然な内容をお返しする場合がございます。ご了承ください。
         （ex: 開発歴について教えてください）
+        </font>
         <br /><br />
         <Box
           component="form"
