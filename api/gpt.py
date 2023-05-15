@@ -90,8 +90,9 @@ class Spokesman:
             values = sorted_similarity_ranks[0]["values"]
             ans_id = values.index(max(values))
 
-            if len(extracted) < self.personal_data_length:
-                extracted += f"「{self.personal_data[idx]["question"]}」に対する回答：{self.personal_data[idx]["answers"][ans_id]}[SEP]"
+            new_text = f"「{self.personal_data[idx]["question"]}」に対する回答：{self.personal_data[idx]["answers"][ans_id]}[SEP]"
+            if len(extracted) + len(new_text) < self.personal_data_length:
+                extracted += new_text
             else:
                 break
         extracted = extracted.strip("[SEP]")
