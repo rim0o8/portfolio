@@ -12,13 +12,14 @@ OPENAI_API_KEY = os.environ["OPENAI_API_KEY"]
 
 class Spokesman:
     def __init__(
-        self, database_path: Path, name: str = "倉島悠吏", personal_data_length=1024, embeddings_engine: str = "text-embedding-ada-002", completion_engine: str = "gpt-3.5-turbo"
+        self, database_path: Path, name: str = "倉島悠吏", personal_data_length=1024, embeddings_engine: str = "text-embedding-ada-002", completion_engine: str = "gpt-3.5-turbo", generate_max_tokens: int = 1024
     ):
         self.name = name
         self.personal_data_length = personal_data_length
         self.embeddings_engine = embeddings_engine
         self.completion_engine = completion_engine
         self.personal_data = self.build_database(database_path)
+        self.generate_max_tokens = generate_max_tokens
 
     def build_database(self, database_path):
         df = pd.read_csv(database_path)
@@ -81,7 +82,7 @@ class Spokesman:
         for resp in openai.ChatCompletion.create(
             model=self.completion_engine,
             messages=messages,
-            max_tokens=1024,
+            max_tokens=self.generate_max_tokens,
             stream=True,
         ):
             if "content" in resp.choices[0].delta:
