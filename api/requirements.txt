@@ -3,4 +3,9 @@ fastapi
 openai
 pandas
 spacy
+matplotlib
+plotly
+scipy
+scikit-learn
+tqdm
 https://github.com/explosion/spacy-models/releases/download/ja_core_news_md-3.0.0/ja_core_news_md-3.0.0.tar.gz

@@ -22,23 +22,21 @@ function App() {
     ReactGA.send("pageview");
   }, []);
 
-  const [inputValue, setInputValue] = useState('');  // 入力値を保持するステート
-  const [curQuestion, setCurQuestion] = useState(null);  // 入力値を保持するステート
-  const [apiData, setApiData] = useState(null);  // APIから受信したデータを保持するステート
-  const [isLoading, setIsLoading] = useState(false);  // データ取得中を示すステート
+  const [inputValue, setInputValue] = useState('');
+  const [curQuestion, setCurQuestion] = useState(null);
+  const [apiData, setApiData] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  // テキストボックスの入力値が変更された時の処理
   const handleChange = event => {
     setInputValue(event.target.value);
   };
 
-  // 送信ボタンがクリックされた時の処理
   const handleSubmit = async event => {
-    event.preventDefault();  // ページのリロードを防
+    event.preventDefault();  // ページのリロードを防ぐ
     setIsLoading(true);
     setCurQuestion(inputValue);
-    setInputValue('');  // テキストボックスを空にする
-    setApiData('');  // APIから受信したデータを空にする
+    setInputValue('');
+    setApiData('');
 
     ReactGA.event({
       category: "Form",
@@ -50,7 +48,7 @@ function App() {
       const formdata = new FormData()
       formdata.append('text', inputValue)
       const response = await fetch(
-        'https://rim0o8.com/api/aboutme', {
+        'http://localhost:8000/api/aboutme', {
           method: 'POST',
           headers: {
             'accept': '*/*',
@@ -67,7 +65,7 @@ function App() {
           if (done) {
             return;
           }
-          setIsLoading(false);  // ローディング状態を終了
+          setIsLoading(false);
 
           setApiData(prevData => prevData + decoder.decode(value));
           return reader.read().then(processText);
@@ -96,7 +94,7 @@ function App() {
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            gap: 2,  // ボックス間のスペース
+            gap: 2,
           }}
         >
           <TextField
@@ -105,7 +103,7 @@ function App() {
             onChange={handleChange}
             label="Your Input"
             sx={{
-              backgroundColor: '#fff',  // テキストフィールドの背景色を白に設定
+              backgroundColor: '#fff',
             }}
           />
           <Button
