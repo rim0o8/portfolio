@@ -12,7 +12,7 @@ OPENAI_API_KEY = os.environ["OPENAI_API_KEY"]
 
 class Spokesman:
     def __init__(
-        self, database_path: Path, name: str = "倉島悠吏", personal_data_length=512
+        self, database_path: Path, name: str = "倉島悠吏", personal_data_length=1024
     ):
         _data = dict(pd.read_csv(database_path))
         self.personal_data = [
