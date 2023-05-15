@@ -91,7 +91,7 @@ class Spokesman:
             ans_id = values.index(max(values))
 
             if len(extracted) < self.personal_data_length:
-                extracted += self.personal_data[ans_id]["answers"][ans_id] + "[SEP]"
+                extracted += f"「{self.personal_data[ans_id]["question"]}」に対する回答：{self.personal_data[ans_id]["answers"][ans_id]}[SEP]"
             else:
                 break
         extracted = extracted.strip("[SEP]")
