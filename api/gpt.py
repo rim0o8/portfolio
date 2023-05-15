@@ -71,7 +71,7 @@ class Spokesman:
         ):
             if 'content' in resp.choices[0].delta:
                 yield resp.choices[0].delta['content']
-            else:
+            else:   # NOTE: 最初の出力はdeltaにcontentがなくroleが含まれる
                 continue
 
     def cos_similarity(self, embeddings1: List[int], embeddings2: List[int]) -> int:
