@@ -5,8 +5,9 @@ from typing import Any, Dict, List, Optional
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
-from gpt import Spokesman
 from pydantic import BaseModel
+
+from gpt import Spokesman
 
 app = FastAPI()
 
