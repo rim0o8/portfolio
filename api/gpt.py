@@ -85,7 +85,6 @@ class Spokesman:
             stream=True,
         ):
             if "content" in resp.choices[0].delta:
-                print(resp.choices[0].delta["content"])
                 yield resp.choices[0].delta["content"]
             else:
                 continue
@@ -126,7 +125,6 @@ class Spokesman:
             answers = row["values"]["answers"]
             ans_id = max(answers, key=answers.get)
 
-            print(self.personal_data[idx]["question"]["text"])
             new_text = f'「{self.personal_data[idx]["question"]["text"]}」に対する回答：{self.personal_data[idx]["answers"][ans_id]["text"]}[SEP]'
             if len(extracted) + len(new_text) < self.personal_data_length:
                 extracted += new_text
