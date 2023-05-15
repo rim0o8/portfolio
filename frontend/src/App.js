@@ -50,7 +50,7 @@ function App() {
       const formdata = new FormData()
       formdata.append('text', inputValue)
       const response = await fetch(
-        'https://rim0o8.com/api/aboutme', {
+        'http://localhost:8000/api/aboutme', {
           method: 'POST',
           headers: {
             'accept': '*/*',
