@@ -1,11 +1,10 @@
 import math
 import os
 from pathlib import Path
-from typing import List
+from typing import List, Optional
 
 import openai
 import pandas as pd
-import spacy
 from openai.embeddings_utils import cosine_similarity, get_embedding
 
 OPENAI_API_KEY = os.environ["OPENAI_API_KEY"]
@@ -13,57 +12,53 @@ OPENAI_API_KEY = os.environ["OPENAI_API_KEY"]
 
 class Spokesman:
     def __init__(
-        self, database_path: Path, name: str = "倉島悠吏", personal_data_length=1024
+        self, database_path: Path, name: str = "倉島悠吏", personal_data_length=1024, embeddings_engine: str = "text-embedding-ada-002", completion_engine: str = "gpt-3.5-turbo"
     ):
-        _data = dict(pd.read_csv(database_path))
-        self.personal_data = [
+        self.name = name
+        self.personal_data_length = personal_data_length
+        self.embeddings_engine = embeddings_engine
+        self.completion_engine = completion_engine
+        self.personal_data = self.build_database(database_path)
+
+    def build_database(self, database_path):
+        df = pd.read_csv(database_path)
+        _data = dict(
+            df.where(df.notnull(), None)
+        )
+        return [
             {
-                "id": i,
                 "question": {
                     "text": question,
-                    "embeddings": get_embedding(
-                        question, engine="text-embedding-ada-002"
-                    ),
+                    "embeddings": self.get_embedding(question),
                 },
                 "answers": {
                     0: {
-                        "text": self.nan2None(_data["Unnamed: 2"].to_list()[1:][i]),
-                        "embeddings": get_embedding(
-                            self.nan2None(_data["Unnamed: 2"].to_list()[1:][i]),
-                            engine="text-embedding-ada-002",
-                        ),
-                    }
-                    if self.nan2None(_data["Unnamed: 2"].to_list()[1:][i])
-                    else None,
+                        "text": _data["Unnamed: 2"].to_list()[1:][i],
+                        "embeddings": self.get_embedding(_data["Unnamed: 2"].to_list()[1:][i]),
+                    },
                     1: {
-                        "text": self.nan2None(_data["Unnamed: 3"].to_list()[1:][i]),
-                        "embeddings": get_embedding(
-                            self.nan2None(_data["Unnamed: 3"].to_list()[1:][i]),
-                            engine="text-embedding-ada-002",
-                        ),
-                    }
-                    if self.nan2None(_data["Unnamed: 3"].to_list()[1:][i])
-                    else None,
+                        "text": _data["Unnamed: 3"].to_list()[1:][i],
+                        "embeddings": self.get_embedding(_data["Unnamed: 3"].to_list()[1:][i]),
+                    },
                     2: {
-                        "text": self.nan2None(_data["Unnamed: 4"].to_list()[1:][i]),
-                        "embeddings": get_embedding(
-                            self.nan2None(_data["Unnamed: 4"].to_list()[1:][i]),
-                            engine="text-embedding-ada-002",
-                        ),
-                    }
-                    if self.nan2None(_data["Unnamed: 4"].to_list()[1:][i])
-                    else None,
+                        "text": _data["Unnamed: 4"].to_list()[1:][i],
+                        "embeddings": self.get_embedding(_data["Unnamed: 4"].to_list()[1:][i]),
+                    },
                 },
             }
             for i, question in enumerate(_data["Unnamed: 1"].to_list()[1:])
-            if self.nan2None(_data["Unnamed: 2"].to_list()[1:][i])
-            or self.nan2None(_data["Unnamed: 3"].to_list()[1:][i])
-            or self.nan2None(_data["Unnamed: 4"].to_list()[1:][i])
+            if _data["Unnamed: 2"].to_list()[1:][i]
+            or _data["Unnamed: 3"].to_list()[1:][i]
+            or _data["Unnamed: 4"].to_list()[1:][i]
         ]
 
-        self.vectorizer = spacy.load("ja_core_news_md")
-        self.personal_data_length = personal_data_length
-        self.name = name
+    def get_embedding(self, text: Optional[str]):
+        if text is None:
+            return None
+        return get_embedding(
+            text,
+            engine=self.embeddings_engine
+        )
 
     def completion(self, message: str):
         messages = [
@@ -84,7 +79,7 @@ class Spokesman:
         messages.append({"role": "user", "content": prompt})
 
         for resp in openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
+            model=self.completion_engine,
             messages=messages,
             max_tokens=1024,
             stream=True,
@@ -95,13 +90,14 @@ class Spokesman:
             else:
                 continue
 
-    def cos_similarity(self, text: str, embeddings: str):
-        text_embeddings = get_embedding(text, engine="text-embedding-ada-002")
-
-        return cosine_similarity(text_embeddings, embeddings)
+    def cos_similarity(self, embeddings1: List[int], embeddings2: List[int]):
+        if not embeddings1 or not embeddings2:
+            return -2
+        return cosine_similarity(embeddings1, embeddings2)
 
     def extract_personal_data(self, message: str):
         similarity_ranks = []
+        message_embeddings = self.get_embedding(message)
         for i in range(len(self.personal_data)):
             answers = self.personal_data[i]["answers"]
             similarity_ranks.append(
@@ -109,18 +105,12 @@ class Spokesman:
                     "id": i,
                     "values": {
                         "q": self.cos_similarity(
-                            message, self.personal_data[i]["question"]["embeddings"]
+                            message_embeddings, self.personal_data[i]["question"]["embeddings"]
                         ),
                         "answers": {
-                            0: self.cos_similarity(message, answers[0]["embeddings"])
-                            if answers[0]
-                            else -2,
-                            1: self.cos_similarity(message, answers[1]["embeddings"])
-                            if answers[1]
-                            else -2,
-                            2: self.cos_similarity(message, answers[2]["embeddings"])
-                            if answers[2]
-                            else -2,
+                            0: self.cos_similarity(message_embeddings, answers[0]["embeddings"]),
+                            1: self.cos_similarity(message_embeddings, answers[1]["embeddings"]),
+                            2: self.cos_similarity(message_embeddings, answers[2]["embeddings"]),
                         },
                     },
                 }
@@ -144,9 +134,3 @@ class Spokesman:
                 break
         extracted = extracted.strip("[SEP]")
         return extracted
-
-    def nan2None(self, text: str):
-        if isinstance(text, float) and math.isnan(text):
-            return None
-        else:
-            return text
