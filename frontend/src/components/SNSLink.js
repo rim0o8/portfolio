@@ -16,7 +16,7 @@ class SNSLink extends Component {
         }
 
         return (
-            <button className="SNSBtn" onClick={openWindow}>
+            <button className="Btn" onClick={openWindow}>
                 <img className="logo" src={exportFunction.replace_no_img(logo_src)}></img>
             </button>
         );

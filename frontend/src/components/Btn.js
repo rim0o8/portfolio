@@ -3,14 +3,14 @@
 import React, { Component } from 'react';
 import '../style/Btn.scss';
 
-class AffiliationBtn extends Component {
+class Btn extends Component {
     render() {
         const {
             logo_src,
             title,
+            subtitle,
+            description,
             link,
-            position,
-            description
         } = this.props;
 
         const openWindow = () => {
@@ -21,11 +21,18 @@ class AffiliationBtn extends Component {
             <button className="Btn" onClick={openWindow}>
                 <img className="logo" src={logo_src}></img>
                 <div className="Btn-title">{title}</div>
-                <b>{position}</b>
+                <b>{subtitle}</b>
                 <div className="Btn-description">{description}</div>
             </button>
         );
     }
 }
 
-export default AffiliationBtn;
+Btn.defaultProps = {
+    title: '',
+    subtitle: '',
+    description: '',
+    link: '',
+};
+
+export default Btn;
