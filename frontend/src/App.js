@@ -1,9 +1,9 @@
-import './style/App.css';
+import './style/App.scss';
 import MyAppBtn from "./components/MyAppBtn.js"
 import AffiliationBtn from "./components/AffiliationBtn.js"
 import Contact from "./components/Contact.js"
 import SNSLink from "./components/SNSLink.js"
-
+import Container from '@mui/material/Container';
 import React, { useState, useEffect } from 'react';
 
 import TextField from '@mui/material/TextField';
@@ -77,10 +77,12 @@ function App() {
 
   return (
     <div className="App">
-      <body className="App-header">
+      <Container maxWidth="md">
         <h2>Yuuri Kurashima</h2>
         <img className="large-logo" src="./img/yuuri_kurashima.jpg" alt=""></img>
+        <p>
         Keywords: NLP, ML
+        </p>
         <h3>Spokesman</h3>
         <font size="4">
         倉島悠吏について、AIエージェントがご質問にお答えいたします。<br />
@@ -97,6 +99,7 @@ function App() {
             flexDirection: 'column',
             alignItems: 'center',
             gap: 2,
+            marginTop: '20px',
           }}
         >
           <TextField
@@ -104,6 +107,7 @@ function App() {
             value={inputValue}
             onChange={handleChange}
             label="Your Input"
+            fullWidth
             sx={{
               backgroundColor: '#fff',
             }}
@@ -193,9 +197,9 @@ function App() {
         <h3>Contact</h3>
         <Contact
           mail="kurashimayuuri@gmail.com"
-          phone=""
+          phone="090-2269-5777"
         />
-      </body>
+      </Container>
     </div>
   );
 }
