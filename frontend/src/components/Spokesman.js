@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import '../style/Spokesman.scss';
 
 import Grid from '@mui/material/Grid';
@@ -10,11 +10,18 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
-import content from "../data/ja/spokesman.json";
 
 import ReactGA from "react-ga4";
 
-const Spokesman = ({ name }) => {
+const Spokesman = ({
+    title,
+    subtitle,
+    description,
+    logo_src,
+    question_prefix,
+    text_firld_message,
+    submit_btn_message,
+}) => {
     const [inputValue, setInputValue] = useState('');
     const [curQuestion, setCurQuestion] = useState(null);
     const [apiData, setApiData] = useState(null);
@@ -55,6 +62,9 @@ const Spokesman = ({ name }) => {
             const decoder = new TextDecoder('utf-8');
 
             reader.read().then(function processText({ done, value }) {
+                if (done) {
+                    return;
+                }
                 setIsLoading(false);
                 setApiData(prevData => prevData + decoder.decode(value));
                 return reader.read().then(processText);
@@ -68,17 +78,17 @@ const Spokesman = ({ name }) => {
         <div>
             <Grid container spacing={4} justifyContent="center" alignItems="center" style={{ marginTop: '20px' }}>
                 <Grid item xs={12} sm={4}>
-                    <Avatar alt={name} src={ content.logo_src } sx={{ width: 200, height: 200 }} />
+                    <Avatar alt={title} src={ logo_src } sx={{ width: 200, height: 200 }} />
                 </Grid>
                 <Grid item xs={12} sm={8}>
                     <Typography variant="h4" gutterBottom>
-                        { content.title }
+                        { title }
                     </Typography>
                     <Typography variant="subtitle1" gutterBottom>
-                        { content.subtitle }
+                        { subtitle }
                     </Typography>
                     <Typography variant="body1" paragraph>
-                        { content.description }
+                        { description }
                     </Typography>
                 </Grid>
             </Grid>
@@ -97,7 +107,7 @@ const Spokesman = ({ name }) => {
                 variant="outlined"
                 value={inputValue}
                 onChange={handleChange}
-                label={ content.text_firld_message }
+                label={ text_firld_message }
                 fullWidth
                 sx={{
                 backgroundColor: '#fff',
@@ -108,7 +118,7 @@ const Spokesman = ({ name }) => {
                 type="submit"
                 color="primary"
             >
-                { content.submit_btn_message }
+                { submit_btn_message }
             </Button>
             </Box>
             <br />
@@ -117,7 +127,7 @@ const Spokesman = ({ name }) => {
             <Card variant="outlined" sx={{ mt: 3 }}>
                 <CardContent>
                 <Typography variant="body2" color="error">
-                    質問　{curQuestion}
+                    {question_prefix}: {curQuestion}
                 </Typography>
                 </CardContent>
             </Card>
