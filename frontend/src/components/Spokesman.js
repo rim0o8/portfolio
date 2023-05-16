@@ -11,17 +11,10 @@ import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
 import content from "../data/ja/spokesman.json";
-import dev from "../data/dev.json";
 
 import ReactGA from "react-ga4";
 
 const Spokesman = ({ name }) => {
-    useEffect(() => {
-        // Google Analytics
-        ReactGA.initialize(dev.GA_ID, );
-        ReactGA.send("pageview");
-    }, []);
-
     const [inputValue, setInputValue] = useState('');
     const [curQuestion, setCurQuestion] = useState(null);
     const [apiData, setApiData] = useState(null);
