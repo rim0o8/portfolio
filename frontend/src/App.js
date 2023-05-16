@@ -5,10 +5,10 @@ import Spokesman from "./components/Spokesman.js"
 import Grid from '@mui/material/Grid';
 import Container from '@mui/material/Container';
 import React, { useEffect } from 'react';
-import metadata from "./data/ja/metadata.json";
 import my_apps from "./data/ja/my_apps.json";
 import positions from "./data/ja/positions.json";
 import sns from "./data/ja/sns.json";
+import spokesman_content from "./data/ja/spokesman.json";
 import dev from "./data/dev.json";
 
 import Typography from '@mui/material/Typography';
@@ -26,7 +26,13 @@ function App() {
     <div className="App">
       <Container maxWidth="md">
         <Spokesman
-          name={ metadata.name_en }
+          title={ spokesman_content.title }
+          subtitle= { spokesman_content.subtitle }
+          description= { spokesman_content.description }
+          logo_src={spokesman_content.logo_src}
+          question_prefix={ spokesman_content.question_prefix }
+          text_firld_message={ spokesman_content.text_firld_message }
+          submit_btn_message={ spokesman_content.submit_btn_message }
         />
         <Typography variant="h5" gutterBottom style={{ marginTop: '20px' }}>
           My Apps
@@ -37,7 +43,7 @@ function App() {
               logo_src={ my_apps.animal_chess.log_src }
               title={ my_apps.animal_chess.title }
               link={ my_apps.animal_chess.link }
-              description={ my_apps.animal_chess.description }
+              description={my_apps.animal_chess.description}
             />
           </Grid>
         </Grid>
