@@ -9,8 +9,11 @@ class Contact extends Component {
 
         return (
             <div>
+                <h3>
                 <a href="mailto:{mail}">{mail}</a>
+                </h3>
                 <div className="Btn-title">{phone}</div>
+                <br></br>
             </div>
         );
     }
