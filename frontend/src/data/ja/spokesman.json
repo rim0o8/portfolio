@@ -1,0 +1,8 @@
+{
+    "title": "Yuuri Kurashima",
+    "subtitle": "spokesman",
+    "description": "倉島悠吏について、AIエージェントがご質問にお答えいたします。\nご質問内容は、本AIの改善に使用されます。\n誤った内容や不自然な内容をお返しする場合がございます。ご了承ください。 （ex: Virufyでの経験について教えてください）",
+    "logo_src": "./img/yuuri_kurashima.jpg",
+    "text_firld_message": "質問内容を入力してください",
+    "submit_btn_message": "質問する"
+}

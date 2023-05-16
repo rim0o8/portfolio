@@ -10,13 +10,15 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
+import content from "../data/ja/spokesman.json";
+import dev from "../data/dev.json";
 
 import ReactGA from "react-ga4";
 
 const Spokesman = ({ name }) => {
     useEffect(() => {
         // Google Analytics
-        ReactGA.initialize("G-THFX69N9EX");
+        ReactGA.initialize(dev.GA_ID, );
         ReactGA.send("pageview");
     }, []);
 
@@ -73,20 +75,17 @@ const Spokesman = ({ name }) => {
         <div>
             <Grid container spacing={4} justifyContent="center" alignItems="center" style={{ marginTop: '20px' }}>
                 <Grid item xs={12} sm={4}>
-                    <Avatar alt={ name } src="./img/yuuri_kurashima.jpg" sx={{ width: 200, height: 200 }} />
+                    <Avatar alt={name} src={ content.logo_src } sx={{ width: 200, height: 200 }} />
                 </Grid>
                 <Grid item xs={12} sm={8}>
                     <Typography variant="h4" gutterBottom>
-                        { name }
+                        { content.title }
                     </Typography>
                     <Typography variant="subtitle1" gutterBottom>
-                    Spokesman
+                        { content.subtitle }
                     </Typography>
                     <Typography variant="body1" paragraph>
-                        倉島悠吏について、AIエージェントがご質問にお答えいたします。<br />
-                        ご質問内容は、本AIの改善に使用されます。<br />
-                        誤った内容や不自然な内容をお返しする場合がございます。ご了承ください。
-                        （ex: Virufyでの経験について教えてください）
+                        { content.description }
                     </Typography>
                 </Grid>
             </Grid>
@@ -105,7 +104,7 @@ const Spokesman = ({ name }) => {
                 variant="outlined"
                 value={inputValue}
                 onChange={handleChange}
-                label="Your Input"
+                label={ content.text_firld_message }
                 fullWidth
                 sx={{
                 backgroundColor: '#fff',
@@ -116,7 +115,7 @@ const Spokesman = ({ name }) => {
                 type="submit"
                 color="primary"
             >
-                送信
+                { content.submit_btn_message }
             </Button>
             </Box>
             <br />

@@ -5,7 +5,11 @@ import Spokesman from "./components/Spokesman.js"
 import Grid from '@mui/material/Grid';
 import Container from '@mui/material/Container';
 import React, { useEffect } from 'react';
-
+import metadata from "./data/ja/metadata.json";
+import my_apps from "./data/ja/my_apps.json";
+import positions from "./data/ja/positions.json";
+import sns from "./data/ja/sns.json";
+import dev from "./data/dev.json";
 
 import Typography from '@mui/material/Typography';
 
@@ -14,7 +18,7 @@ import ReactGA from "react-ga4";
 function App() {
   useEffect(() => {
     // Google Analytics
-    ReactGA.initialize("G-THFX69N9EX");
+    ReactGA.initialize(dev.GA_ID);
     ReactGA.send("pageview");
   }, []);
 
@@ -22,7 +26,7 @@ function App() {
     <div className="App">
       <Container maxWidth="md">
         <Spokesman
-          name="Yuuri Kurashima"
+          name={ metadata.name_en }
         />
         <Typography variant="h5" gutterBottom style={{ marginTop: '20px' }}>
           My Apps
@@ -30,43 +34,43 @@ function App() {
         <Grid container spacing={3}>
           <Grid item xs={12} sm={12}>
             <Btn
-              logo_src="./img/animal_shogi.webp"
-              title="どうぶつしょうぎ"
-              link="https://rim0o8.github.io/animal_shogi-page/AnimalShogi.html"
-              description="2019.7にプログラミングを学びたての時にVue.jsの勉強のため個人制作"
+              logo_src={ my_apps.animal_chess.log_src }
+              title={ my_apps.animal_chess.title }
+              link={ my_apps.animal_chess.link }
+              description={ my_apps.animal_chess.description }
             />
           </Grid>
         </Grid>
 
         <Typography variant="h5" gutterBottom style={{ marginTop: '20px' }}>
-          Affiliation
+          Current positions
         </Typography>
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6}>
             <Btn
-              logo_src="./img/TokyoUniversityOfScience.png"
-              title="東京理科大学"
-              link="https://www.tus.ac.jp/"
-              subtitle="創域理工学研究科数理科学専攻M2, 田中真紀子研究室"
-              description="微分幾何学において、等質空間（全ての点が同様の性質の空間）はリー群（連続的対称性を持つ数学的構造）の性質を探索する手段を与えます。統計的対象もリー群と見做せ、この手法を用いて新たな性質の探索を行います"
+              logo_src={ positions.tus.logo_src }
+              title={ positions.tus.title }
+              link={ positions.tus.link }
+              subtitle={ positions.tus.subtitle }
+              description={ positions.tus.description }
             />
           </Grid>
           <Grid item xs={12} sm={6}>
             <Btn
-              logo_src="./img/elyza.png"
-              title="ELYZA.inc"
-              link="https://elyza.ai/"
-              subtitle="Project Scope Lead AI ENGINEER"
-              description="最大手の大手人材・広告企業とのPoCプロジェクトにおいて、日本語の大規模言語生成モデル「ELYZA Pencil」の性能改善に取り組み、1年以上に渡り継続的に成果を出し、クライアントの業務効率化に貢献しました。"
+              logo_src={ positions.elyza.logo_src }
+              title={ positions.elyza.title }
+              link={ positions.elyza.link }
+              subtitle={ positions.elyza.subtitle }
+              description={ positions.elyza.description }
             />
           </Grid>
           <Grid item xs={12} sm={6}>
             <Btn
-              logo_src="./img/virufy.jpeg"
-              title="Virufy"
-              link="https://virufy.org/ja/"
-              subtitle="Japan Project Manager | MLOps ENGINEER"
-              description="12箇所のPCR検査場/病院/待機ホテルと連携し、日本人の咳の音声データを収集するプロジェクトを管理。0から20名規模のチームを立ち上げる。また、MLOps Engineerとして、SageMaker Neoでモデルの最適化に取り組む"
+              logo_src={ positions.virufy.logo_src }
+              title={ positions.virufy.title }
+              link={ positions.virufy.link }
+              subtitle={ positions.virufy.subtitle }
+              description={ positions.virufy.description }
             />
           </Grid>
         </Grid>
@@ -77,26 +81,26 @@ function App() {
         <Grid container spacing={2}>
           <Grid item xs={6} sm={3}>
             <Btn
-              link="https://github.com/rim0o8"
-              logo_src="./img/github.png"
+              link={sns.github.link}
+              logo_src={sns.github.logo_src}
             />
           </Grid>
           <Grid item xs={6} sm={3}>
             <Btn
-              link="https://www.linkedin.com/in/yuuri-kurashima-2828ab216/"
-              logo_src="./img/linkedin.png"
+              link={ sns.linkedin.link }
+              logo_src={ sns.linkedin.logo_src }
             />
           </Grid>
           <Grid item xs={6} sm={3}>
             <Btn
-              link="https://twitter.com/q5TyT96EeKs6Xs8"
-              logo_src="./img/twitter.png"
+              link={ sns.twitter.link }
+              logo_src={ sns.twitter.logo_src }
             />
           </Grid>
           <Grid item xs={6} sm={3}>
             <Btn
-              link="https://www.facebook.com/kurashimayuuri"
-              logo_src="./img/facebook.png"
+              link={ sns.facebook.link }
+              logo_src={ sns.facebook.logo_src }
             />
           </Grid>
         </Grid>

@@ -1,0 +1,8 @@
+{
+    "animal_chess": {
+        "title": "どうぶつ将棋",
+        "log_src": "./img/animal_shogi.webp",
+        "link": "https://rim0o8.github.io/animal_shogi-page/AnimalShogi.html",
+        "description": "2019.7にプログラミングを学びたての時にVue.jsの勉強のため個人制作"
+    }
+}
