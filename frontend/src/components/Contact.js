@@ -8,7 +8,7 @@ class Contact extends Component {
         } = this.props;
 
         return (
-            <div>
+            <div className="ContactBox">
                 <a href="mailto:{mail}">{mail}</a>
                 <div className="Btn-title">{phone}</div>
             </div>

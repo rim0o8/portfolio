@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import '../style/SNSLink.css';
+import '../style/SNSLink.scss';
 import { replace_no_img } from '../utils';
 import exportFunction from "../utils"
 

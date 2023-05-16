@@ -1,6 +1,6 @@
 // 新しいtabでlinkを開くボタン
 import React, { Component } from 'react';
-import '../style/Btn.css';
+import '../style/Btn.scss';
 import exportFunction from "../utils"
 
 class MyAppBtn extends Component {
