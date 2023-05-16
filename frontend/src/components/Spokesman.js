@@ -48,7 +48,7 @@ const Spokesman = ({
             const formdata = new FormData()
             formdata.append('text', inputValue)
             const response = await fetch(
-                'http://localhost:8000/api/aboutme', {
+                'https://rim0o8.com/api/aboutme', {
                 method: 'POST',
                 headers: {
                     'accept': '*/*',
