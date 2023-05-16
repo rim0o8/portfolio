@@ -1,0 +1,18 @@
+{
+    "github": {
+        "link": "https://github.com/rim0o8",
+        "logo_src": "./img/github.png"
+    },
+    "twitter": {
+        "link": "https://twitter.com/q5TyT96EeKs6Xs8",
+        "logo_src": "./img/twitter.png"
+    },
+    "linkedin": {
+        "link": "https://www.linkedin.com/in/yuuri-kurashima-2828ab216/",
+        "logo_src": "./img/linkedin.png"
+    },
+    "facebook": {
+        "link": "https://www.facebook.com/kurashimayuuri",
+        "logo_src": "./img/facebook.png"
+    }
+}
