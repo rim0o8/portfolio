@@ -19,10 +19,10 @@ class Btn extends Component {
 
         return (
             <button className="Btn" onClick={openWindow}>
-                <img className="logo" src={logo_src}></img>
-                <div className="Btn-title">{title}</div>
-                <b>{subtitle}</b>
-                <div className="Btn-description">{description}</div>
+                { logo_src && <img className="logo" src={logo_src}></img> }
+                { title && <div className="Btn-title">{title}</div> }
+                { subtitle && <b>{subtitle}</b> }
+                { description && <div className="Btn-description">{description}</div> }
             </button>
         );
     }
