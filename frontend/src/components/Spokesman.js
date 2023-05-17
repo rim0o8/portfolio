@@ -81,7 +81,7 @@ const Spokesman = ({
                     <Avatar alt={title} src={ logo_src } sx={{ width: 200, height: 200 }} />
                 </Grid>
                 <Grid item xs={12} sm={8}>
-                    <Typography variant="h4" gutterBottom>
+                    <Typography variant="h4" className='gradient' gutterBottom>
                         { title }
                     </Typography>
                     <Typography variant="subtitle1" gutterBottom>
