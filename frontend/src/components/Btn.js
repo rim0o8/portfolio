@@ -20,7 +20,7 @@ class Btn extends Component {
         return (
             <button className="Btn" onClick={openWindow}>
                 { logo_src && <img className="logo" src={logo_src}></img> }
-                { title && <div className="Btn-title">{title}</div> }
+                { title && <div className="Btn-title gradient-yellow">{title}</div> }
                 { subtitle && <b>{subtitle}</b> }
                 { description && <div className="Btn-description">{description}</div> }
             </button>
