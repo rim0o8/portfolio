@@ -1,0 +1,1 @@
+python3 -m spacy download ja_core_news_md

@@ -34,7 +34,7 @@ function App() {
           text_firld_message={ spokesman_content.text_firld_message }
           submit_btn_message={ spokesman_content.submit_btn_message }
         />
-        <Typography variant="h5" gutterBottom style={{ marginTop: '20px' }}>
+        <Typography variant="h5" className='gradient-green' gutterBottom style={{ marginTop: '20px' }}>
           My Apps
         </Typography>
         <Grid container spacing={3}>
@@ -48,7 +48,7 @@ function App() {
           </Grid>
         </Grid>
 
-        <Typography variant="h5" gutterBottom style={{ marginTop: '20px' }}>
+        <Typography variant="h5" className='gradient-green' gutterBottom style={{ marginTop: '20px' }}>
           Current positions
         </Typography>
         <Grid container spacing={3}>
@@ -81,7 +81,7 @@ function App() {
           </Grid>
         </Grid>
 
-        <Typography variant="h5" gutterBottom style={{ marginTop: '20px' }}>
+        <Typography variant="h5" className='gradient-green' gutterBottom style={{ marginTop: '20px' }}>
           Connect with me
         </Typography>
         <Grid container spacing={2}>
@@ -110,7 +110,7 @@ function App() {
             />
           </Grid>
         </Grid>
-        <Typography variant="h5" gutterBottom style={{ marginTop: '20px' }}>
+        <Typography variant="h5" className='gradient-green' gutterBottom style={{ marginTop: '20px' }}>
           Contact
         </Typography>
         <Contact
