@@ -1,13 +1,11 @@
-import math
-import os
 from pathlib import Path
 from typing import Dict, List, Optional, Union
 
-import openai
 import pandas as pd
+from openai import OpenAI
 from openai.embeddings_utils import cosine_similarity, get_embedding
 
-OPENAI_API_KEY = os.environ["OPENAI_API_KEY"]
+client = OpenAI()
 
 
 class Spokesman:
@@ -15,13 +13,11 @@ class Spokesman:
         self,
         database_path: Path,
         name: str = "倉島悠吏",
-        personal_data_length=1024,
         embeddings_engine: str = "text-embedding-ada-002",
         completion_engine: str = "gpt-3.5-turbo",
         generate_max_tokens: int = 1024,
     ) -> None:
         self.name = name
-        self.personal_data_length = personal_data_length
         self.embeddings_engine = embeddings_engine
         self.completion_engine = completion_engine
         self.personal_data = self.build_database(database_path)
@@ -61,42 +57,121 @@ class Spokesman:
             return None
         return get_embedding(text, engine=self.embeddings_engine)
 
+    def update_personal_data(self, question: str, answer: str):
+        self.personal_data.append(
+            {
+                "question": {
+                    "text": question,
+                    "embeddings": self.get_embedding(question),
+                },
+                "answers": {
+                    0: {"text": answer, "embeddings": self.get_embedding(answer)},
+                    1: {"text": None, "embeddings": None},
+                    2: {"text": None, "embeddings": None},
+                },
+            }
+        )
+
     def completion(self, message: str) -> str:
-        messages = [
+        personal_data = self.extract_personal_data(message)
+        messages = []
+        system_message_1 = f"あなたは{self.name}です。"
+        system_message_2 = "これまで対話していない前提で話してください。"
+        system_message_3 = (
+            "これまでの対話で触れられた内容以外のことは話さないでください。"
+        )
+
+        for i, item in enumerate(personal_data):
+            if (
+                len("".join([item["content"] for item in messages]))
+                + len(item["question"])
+                + len(item["answer"])
+                + len(message)
+                + len(system_message_1)
+                + len(system_message_2)
+                + len(system_message_3)
+                > self.generate_max_tokens
+            ):
+                break
+
+            messages.append(
+                {
+                    "role": "user",
+                    "content": item["question"],
+                }
+            )
+            messages.append(
+                {
+                    "role": "assistant",
+                    "content": item["answer"],
+                }
+            )
+
+        messages.append(
             {
                 "role": "system",
-                "content": f"{self.name}という人物に成り切ってください。あなたは人事担当者などからの質問に対して{self.name}の代わりに誠実な回答を行います。",
+                "content": system_message_1,
             }
-        ]
-        personal_data = self.extract_personal_data(message)
-        prompt = f"""{personal_data}
-        上記のデータをもとに、以下の質問に論理的かつ魅力的に答えてください。
-        ただし、上記データは[SEP]で各章に分割されており、内容を混同してはいけません。
-        また、必ずしも質問に関係のあるデータが与えられるわけではないので、使用するデータは取捨選択してください。
-        わからない場合は、わからないと答えてください。
+        )
+        messages.append(
+            {
+                "role": "system",
+                "content": system_message_2,
+            }
+        )
+        messages.append(
+            {
+                "role": "system",
+                "content": system_message_3,
+            }
+        )
 
-        質問：{message}
-        """
-        print(prompt)
-        messages.append({"role": "user", "content": prompt})
+        messages.append(
+            {
+                "role": "user",
+                "content": "これまでの対話はなかった前提で内容を要約して、次の質問に答えてください："
+                + message,
+            }
+        )
 
-        for resp in openai.ChatCompletion.create(
-            model=self.completion_engine,
-            messages=messages,
+        input_text = ""
+        for msg in messages:
+            if msg["role"] == "user":
+                user = "人事担当者"
+            elif msg["role"] == "assistant":
+                user = self.name
+            elif msg["role"] == "assistant":
+                user = "注釈"
+
+            input_text += f'{user}: {msg["content"]}\n{self.name}: '
+
+        ans = ""
+        stream = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {
+                    "role": "system",
+                    "content": input_text,
+                }
+            ],
             max_tokens=self.generate_max_tokens,
             stream=True,
-        ):
-            if "content" in resp.choices[0].delta:
-                yield resp.choices[0].delta["content"]
-            else:  # NOTE: 最初の出力はdeltaにcontentがなくroleが含まれる
-                continue
+        )
+        for resp in stream:
+            print(resp)
+            if resp.choices[0].finish_reason:
+                self.update_personal_data(message, ans)
+            if resp.choices[0].delta.content is not None:
+                content = resp.choices[0].delta.content
+                ans += content
+                yield content
 
     def cos_similarity(self, embeddings1: List[int], embeddings2: List[int]) -> int:
         if not embeddings1 or not embeddings2:
             return -2
         return cosine_similarity(embeddings1, embeddings2)
 
-    def extract_personal_data(self, message: str) -> str:
+    def extract_personal_data(self, message: str) -> List[Dict[str, str]]:
         similarity_ranks = []
         message_embeddings = self.get_embedding(message)
         for i in range(len(self.personal_data)):
@@ -122,17 +197,17 @@ class Spokesman:
         sorted_similarity_ranks = sorted(
             similarity_ranks, key=lambda x: x["values"]["question"], reverse=True
         )
-        extracted = ""
-        while True:
+        extracted = []
+        while sorted_similarity_ranks:
             row = sorted_similarity_ranks.pop(0)
             idx = row["id"]
             answers = row["values"]["answers"]
             ans_id = max(answers, key=answers.get)
+            extracted.append(
+                {
+                    "question": self.personal_data[idx]["question"]["text"],
+                    "answer": self.personal_data[idx]["answers"][ans_id]["text"],
+                }
+            )
 
-            new_text = f'「{self.personal_data[idx]["question"]["text"]}」に対する回答：{self.personal_data[idx]["answers"][ans_id]["text"]}[SEP]'
-            if len(extracted) + len(new_text) < self.personal_data_length:
-                extracted += new_text
-            else:
-                break
-        extracted = extracted.strip("[SEP]")
         return extracted
