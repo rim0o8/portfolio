@@ -5,50 +5,22 @@ import { useTranslation } from 'react-i18next'
 
 export function Skills() {
   const { t } = useTranslation()
-
-  const skills = [
-    {
-      category: t('dataEngineering'),
-      icon: Database,
-      items: [
-        t('skillSQL'),
-        t('skillPython'),
-        t('skillSpark'),
-        t('skillHadoop'),
-        t('skillETL'),
-        t('skillDataWarehousing')
-      ]
-    },
-    {
-      category: t('llmEngineering'),
-      icon: Brain,
-      items: [
-        t('skillNLP'),
-        t('skillTensorFlow'),
-        t('skillPyTorch'),
-        t('skillHuggingFace'),
-        t('skillFineTuning'),
-        t('skillPromptEng')
-      ]
-    },
-    {
-      category: t('cloudTools'),
-      icon: Cloud,
-      items: [
-        t('skillAWS'),
-        t('skillGCP'),
-        t('skillDocker'),
-        t('skillKubernetes'),
-        t('skillGit'),
-        t('skillCICD')
-      ]
-    }
+  const skillsConfig = [
+    { id: '1', icon: Database },
+    { id: '2', icon: Brain },
+    { id: '3', icon: Cloud }
   ]
+
+  const skills = skillsConfig.map(({ id, icon }) => ({
+    category: t(`skills.items.${id}.title`),
+    icon,
+    items: t(`skills.items.${id}.items`, { returnObjects: true }) as string[]
+  }))
 
   return (
     <section id="skills" className="py-20">
       <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-12 text-center">
-        {t('skillsTitle')}
+        {t('skills.title')}
       </h2>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {skills.map((skillSet) => (
@@ -73,4 +45,3 @@ export function Skills() {
     </section>
   )
 }
-

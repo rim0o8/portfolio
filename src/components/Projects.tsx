@@ -11,18 +11,18 @@ export function Projects() {
   const projects = Array.from({ length: 3 }, (_, i) => {
     const index = i + 1
     return {
-      title: t(`projects.${index}.title`),
-      description: t(`projects.${index}.description`), 
-      image: t(`projects.${index}.image`),
-      demoLink: t(`projects.${index}.demoLink`),
-      githubLink: t(`projects.${index}.githubLink`),
+      title: t(`projects.items.${index}.title`),
+      description: t(`projects.items.${index}.description`), 
+      image: t(`projects.items.${index}.image`),
+      demoLink: t(`projects.items.${index}.demoLink`),
+      githubLink: t(`projects.items.${index}.githubLink`),
     }
   })
 
   return (
     <section id="projects" className="py-20">
       <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-12 text-center">
-        {t('projectsTitle')}
+        {t('projects.title')}
       </h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {projects.map((project) => (
