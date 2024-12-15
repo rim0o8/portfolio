@@ -50,12 +50,12 @@ export default function Contact() {
   return (
     <section id="contact" className="py-20">
       <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-12 text-center">
-        {t('contactTitle')}
+        {t('contact.title')}
       </h2>
       <form onSubmit={handleSubmit} className="max-w-md mx-auto space-y-6">
         <div>
           <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-            {t('contactName')}
+            {t('contact.name')}
           </label>
           <Input
             type="text"
@@ -69,7 +69,7 @@ export default function Contact() {
         </div>
         <div>
           <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-            {t('contactEmail')}
+            {t('contact.email')}
           </label>
           <Input
             type="email"
@@ -83,7 +83,7 @@ export default function Contact() {
         </div>
         <div>
           <label htmlFor="message" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-            {t('contactMessage')}
+            {t('contact.message')}
           </label>
           <Textarea
             id="message"
@@ -96,7 +96,7 @@ export default function Contact() {
           />
         </div>
         <Button type="submit" className="w-full">
-          {t('contactSubmit')}
+          {t('contact.submit')}
           <Send className="ml-2 w-4 h-4" />
         </Button>
       </form>

@@ -23,28 +23,28 @@ export function Header() {
             onClick={() => scrollToSection('hero')}
             className="text-sm font-medium transition-colors hover:text-primary"
           >
-            {t('home')}
+            {t('navigation.home')}
           </button>
           <button
             type="button"
             onClick={() => scrollToSection('about')}
             className="text-sm font-medium transition-colors hover:text-primary"
           >
-            {t('about')}
+            {t('navigation.about')}
           </button>
           <button
             type="button"
             onClick={() => scrollToSection('projects')}
             className="text-sm font-medium transition-colors hover:text-primary"
           >
-            {t('project')}
+            {t('navigation.project')}
           </button>
           <button
             type="button"
             onClick={() => scrollToSection('contact')}
             className="text-sm font-medium transition-colors hover:text-primary"
           >
-            {t('contact')}
+            {t('navigation.contact')}
           </button>
         </nav>
         <div className="flex items-center gap-4">
