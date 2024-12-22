@@ -29,8 +29,8 @@ const resources = {
       // Hero Section
       hero: {
         title: 'Yuri Kurashima',
-        subtitle: 'Turning Data into Insights, Ideas into AI Solutions',
-        description: 'Specialized in data engineering, machine learning, and large language models. Building scalable data pipelines and innovative AI applications.',
+        subtitle: 'Data & LLM Engineer',
+        description: '',
         cta: 'View Projects'
       },
 
@@ -52,14 +52,14 @@ const resources = {
             ]
           },
           2: {
-            title: 'LLM Engineering',
+            title: 'AI',
             description: 'Developing and fine-tuning large language models using state-of-the-art frameworks and techniques.',
-            items: ['Natural Language Processing', 'TensorFlow', 'PyTorch', 'Hugging Face Transformers', 'Fine-tuning LLMs', 'Prompt Engineering']
+            items: ['Natural Language Processing', 'TensorFlow', 'PyTorch', 'Transformers', 'Langchain', 'Dify']
           },
           3: {
             title: 'Cloud & Tools',
             description: 'Expertise in cloud platforms and DevOps tools for deploying and managing applications at scale.',
-            items: ['AWS', 'Google Cloud Platform', 'Docker', 'Kubernetes', 'Git', 'CI/CD']
+            items: ['AWS', 'Google Cloud Platform', 'Docker', 'Kubernetes']
           }
         }
       },
@@ -136,8 +136,8 @@ const resources = {
       // Hero Section
       hero: {
         title: '倉島悠吏',
-        subtitle: 'データを洞察に、アイデアをAIソリューションに',
-        description: 'データエンジニアリング、機械学習、大規模言語モデルを専門とし、スケーラブルなデータパイプラインと革新的なAIアプリケーションを構築しています。',
+        subtitle: 'データエンジニア/LLMエンジニア',
+        description: '',
         cta: 'プロジェクトを見る'
       },
 
@@ -152,14 +152,14 @@ const resources = {
             items: ['SQL', 'Python', 'BigQuery', 'Dataform', 'Digdag', 'Aurora DB']
           },
           2: {
-            title: 'LLMエンジニアリング',
+            title: 'AI',
             description: '最先端のフレームワークとテクニックを使用した大規模言語モデルの開発とファインチューニング。',
-            items: ['自然言語処理', 'TensorFlow', 'PyTorch', 'Hugging Face Transformers', 'LLMファインチューニング', 'プロンプトエンジニアリング']
+            items: ['自然言語処理', 'TensorFlow', 'PyTorch', 'Transformers', 'Langchain', 'Dify']
           },
           3: {
             title: 'クラウド & ツール',
             description: 'アプリケーションのスケーラブルなデプロイと管理のためのクラウドプラットフォームとDevOpsツールの専門知識。',
-            items: ['AWS', 'Google Cloud Platform', 'Docker', 'Kubernetes', 'Git', 'CI/CD']
+            items: ['AWS', 'Google Cloud Platform', 'Docker', 'Kubernetes']
           }
         }
       },

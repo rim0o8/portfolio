@@ -1,6 +1,5 @@
 'use client'
 
-import { Globe } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { LanguageSwitcher } from './LanguageSwitcher'
 
@@ -48,10 +47,7 @@ export function Header() {
           </button>
         </nav>
         <div className="flex items-center gap-4">
-          <div className="flex items-center border rounded-full p-1 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
-            <Globe className="w-4 h-4 mr-1" />
             <LanguageSwitcher />
-          </div>
         </div>
       </div>
     </header>
