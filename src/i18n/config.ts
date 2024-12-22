@@ -91,6 +91,13 @@ const resources = {
             image: '/dena.png?height=400&width=600',
             demoLink: 'https://arc.net/l/quote/chbregrd',
             githubLink: ''
+          },
+          4: {
+            title: 'Tetris',
+            description: 'Tetris mobile game',
+            image: '/tetris.jpeg?height=400&width=600',
+            demoLink: 'https://ca1e80c0.tetris-75v.pages.dev/',
+            githubLink: 'https://github.com/rim0o8/tetris'
           }
         }
       },
@@ -191,6 +198,13 @@ const resources = {
             image: '/dena.png?height=400&width=600',
             demoLink: 'https://arc.net/l/quote/chbregrd',
             githubLink: ''
+          },
+          4: {
+            title: 'テトリス',
+            description: 'テトリスのモバイルゲーム',
+            image: '/tetris.jpeg?height=400&width=600',
+            demoLink: 'https://ca1e80c0.tetris-75v.pages.dev/',
+            githubLink: 'https://github.com/rim0o8/tetris'
           }
         }
       },
