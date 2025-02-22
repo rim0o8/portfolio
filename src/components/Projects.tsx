@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next'
 export function Projects() {
   const { t } = useTranslation()
 
-  const projects = Array.from({ length: 4 }, (_, i) => {
+  const projects = Array.from({ length: 6 }, (_, i) => {
     const index = i + 1
     return {
       title: t(`projects.items.${index}.title`),

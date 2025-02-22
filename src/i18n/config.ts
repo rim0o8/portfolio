@@ -200,6 +200,20 @@ const resources = {
             githubLink: ''
           },
           4: {
+            title: '業務特化生成AIワークフロー開発',
+            description: '複数社向けにAgentを活用した業務効率化ワークフローWebアプリを提供',
+            image: '',
+            demoLink: '',
+            githubLink: ''
+          },
+          5: {
+            title: 'Difyホスティング',
+            description: '複数社向けにDifyをGoogle Cloud/AWSにホスト。Cognitoを用いたセキュリティ強化等を実施',
+            image: '',
+            demoLink: '',
+            githubLink: ''
+          },
+          6: {
             title: 'テトリス',
             description: 'テトリスのモバイルゲーム',
             image: '/tetris.jpeg?height=400&width=600',
