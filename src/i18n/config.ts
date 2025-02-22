@@ -93,6 +93,20 @@ const resources = {
             githubLink: ''
           },
           4: {
+            "title": "Development of specialized AI workflows for business.",
+            "description": "Provide a specialized AI workflow Web app optimized for multiple companies using Agents to improve business efficiency.",
+            "image": "",
+            "demoLink": "",
+            "githubLink": ""
+          },
+          5: {
+              "title": "Dify Hosting",
+              "description": "Host Dify on Google Cloud/AWS for multiple companies. Implement security enhancement using Cognito.",
+              "image": "",
+              "demoLink": "",
+              "githubLink": ""
+          },
+          6: {
             title: 'Tetris',
             description: 'Tetris mobile game',
             image: '/tetris.jpeg?height=400&width=600',
