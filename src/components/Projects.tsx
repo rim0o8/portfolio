@@ -1,14 +1,14 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
-import { ExternalLink, Github } from 'lucide-react'
+import { Brain, ExternalLink, Github } from 'lucide-react'
 import Image from 'next/image'
 import { useTranslation } from 'react-i18next'
 
 export function Projects() {
   const { t } = useTranslation()
 
-  const projects = Array.from({ length: 6 }, (_, i) => {
+  const projects = Array.from({ length: 7 }, (_, i) => {
     const index = i + 1
     return {
       title: t(`projects.items.${index}.title`),
@@ -27,7 +27,19 @@ export function Projects() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {projects.map((project) => (
           <div key={project.title} className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden transition-transform hover:scale-105 flex flex-col">
-            <Image src={project.image} alt={project.title} width={600} height={400} className="w-full h-48 object-cover" />
+            {project.image ? (
+              <Image 
+                src={project.image} 
+                alt={project.title} 
+                width={600} 
+                height={400} 
+                className="w-full h-48 object-cover" 
+              />
+            ) : (
+              <div className="w-full h-48 bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
+                <Brain className="w-24 h-24 text-gray-400 dark:text-gray-500" />
+              </div>
+            )}
             <div className="p-6 flex-1 flex flex-col">
               <div>
                 <h3 className="text-xl font-semibold text-gray-800 dark:text-white mb-2">{project.title}</h3>

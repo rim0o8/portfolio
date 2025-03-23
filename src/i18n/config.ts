@@ -112,6 +112,13 @@ const resources = {
             image: '/tetris.jpeg?height=400&width=600',
             demoLink: 'https://ca1e80c0.tetris-75v.pages.dev/',
             githubLink: 'https://github.com/rim0o8/tetris'
+          },
+          7: {
+            title: 'Logion',
+            description: 'Full-Stack Gen-AI Platform',
+            image: '',
+            demoLink: 'https://www.logion.dev/',
+            githubLink: ''
           }
         }
       },
@@ -233,6 +240,13 @@ const resources = {
             image: '/tetris.jpeg?height=400&width=600',
             demoLink: 'https://ca1e80c0.tetris-75v.pages.dev/',
             githubLink: 'https://github.com/rim0o8/tetris'
+          },
+          7: {
+            title: 'Logion',
+            description: 'Full-Stack Gen-AI Platform',
+            image: '',
+            demoLink: 'https://www.logion.dev/',
+            githubLink: ''
           }
         }
       },
