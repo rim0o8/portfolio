@@ -3,7 +3,6 @@ import Footer from '../components/Footer'
 import { Header } from '../components/Header'
 import { Hero } from '../components/Hero'
 import { Projects } from '../components/Projects'
-import { Skills } from '../components/Skills'
 
 export default function Home() {
   return (
@@ -21,15 +20,6 @@ export default function Home() {
       <main className="container mx-auto px-4 pt-24 relative">
         <div id="hero">
           <Hero />
-        </div>
-        
-        <div id="about" className="py-16 relative">
-          <div className="absolute left-0 top-0 w-full h-20 bg-gradient-to-b from-background to-transparent -z-10" />
-          <div className="max-w-4xl mx-auto">
-            <div className="animate-fade-in">
-              <Skills />
-            </div>
-          </div>
         </div>
         
         <div id="projects" className="py-16 relative">
