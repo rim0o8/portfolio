@@ -31,7 +31,8 @@ const resources = {
         title: 'Yuri Kurashima',
         subtitle: 'Data & LLM Engineer',
         description: '',
-        cta: 'View Projects'
+        cta: 'View Projects',
+        contact: 'Contact Me'
       },
 
       // Skills Section
@@ -102,18 +103,18 @@ const resources = {
           5: {
               "title": "Dify Hosting",
               "description": "Host Dify on Google Cloud/AWS for multiple companies. Implement security enhancement using Cognito.",
-              "image": "",
+              "image": "/dify.png",
               "demoLink": "",
               "githubLink": ""
           },
+          // 6: {
+          //   title: 'Tetris',
+          //   description: 'Tetris mobile game',
+          //   image: '/tetris.jpeg?height=400&width=600',
+          //   demoLink: 'https://ca1e80c0.tetris-75v.pages.dev/',
+          //   githubLink: 'https://github.com/rim0o8/tetris'
+          // },
           6: {
-            title: 'Tetris',
-            description: 'Tetris mobile game',
-            image: '/tetris.jpeg?height=400&width=600',
-            demoLink: 'https://ca1e80c0.tetris-75v.pages.dev/',
-            githubLink: 'https://github.com/rim0o8/tetris'
-          },
-          7: {
             title: 'Logion',
             description: 'Full-Stack Gen-AI Platform',
             image: '',
@@ -166,7 +167,8 @@ const resources = {
         title: '倉島悠吏',
         subtitle: 'データエンジニア/LLMエンジニア',
         description: '',
-        cta: 'プロジェクトを見る'
+        cta: 'プロジェクトを見る',
+        contact: 'お問い合わせ'
       },
 
       // Skills Section
@@ -230,18 +232,18 @@ const resources = {
           5: {
             title: 'Difyホスティング',
             description: '複数社向けにDifyをGoogle Cloud/AWSにホスト。Cognitoを用いたセキュリティ強化等を実施',
-            image: '',
+            image: '/dify.png',
             demoLink: '',
             githubLink: ''
           },
+          // 6: {
+          //   title: 'テトリス',
+          //   description: 'テトリスのモバイルゲーム',
+          //   image: '/tetris.jpeg?height=400&width=600',
+          //   demoLink: 'https://ca1e80c0.tetris-75v.pages.dev/',
+          //   githubLink: 'https://github.com/rim0o8/tetris'
+          // },
           6: {
-            title: 'テトリス',
-            description: 'テトリスのモバイルゲーム',
-            image: '/tetris.jpeg?height=400&width=600',
-            demoLink: 'https://ca1e80c0.tetris-75v.pages.dev/',
-            githubLink: 'https://github.com/rim0o8/tetris'
-          },
-          7: {
             title: 'Logion',
             description: 'Full-Stack Gen-AI Platform',
             image: '',
