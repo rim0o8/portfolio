@@ -640,3 +640,73 @@
 .pokemon-card-wrapper:hover .pokemon-card::after {
   opacity: 0.4;
 }
+
+/* Mobile touch styles */
+@media (hover: none) and (pointer: coarse) {
+  .pokemon-card-wrapper:hover .card-shine,
+  .pokemon-card-wrapper:hover .card-glare,
+  .pokemon-card-wrapper:hover .card-sparkles,
+  .pokemon-card-wrapper:hover .pokemon-card::before,
+  .pokemon-card-wrapper:hover .pokemon-card::after {
+    opacity: 0;
+  }
+  
+  .pokemon-card-wrapper:hover .pokemon-card {
+    background-image: none;
+  }
+}
+
+/* Active card state for mobile */
+.card-active .card-shine,
+.card-active .card-glare,
+.card-active .card-sparkles,
+.card-active .pokemon-card::before,
+.card-active .pokemon-card::after {
+  opacity: 1 !important;
+}
+
+.card-active .pokemon-card {
+  background-image: 
+    linear-gradient(135deg, #1a1a2e 0%, #0f0f1e 50%, #1a1a2e 100%),
+    repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 5px,
+      rgba(255, 255, 255, 0.02) 5px,
+      rgba(255, 255, 255, 0.02) 10px
+    ) !important;
+}
+
+.card-active {
+  z-index: 10;
+  touch-action: none;
+}
+
+/* Visual indicator for active card */
+.card-active .pokemon-card {
+  box-shadow: 
+    0 30px 60px rgba(0, 0, 0, 0.4),
+    0 0 0 2px rgba(255, 255, 255, 0.2);
+}
+
+/* Tap indicator for mobile */
+.card-active::after {
+  content: '';
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 4px 12px;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  font-size: 12px;
+  border-radius: 16px;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .card-active::after {
+    content: 'Tap again to close';
+  }
+}

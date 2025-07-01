@@ -8,6 +8,7 @@ import { useEffect, useRef, useState } from 'react'
 
 export function Projects() {
   const { t } = useTranslation()
+  const [activeCard, setActiveCard] = useState<number | null>(null)
 
   const projects = Array.from({ length: 6 }, (_, i) => {
     const index = i + 1
@@ -27,49 +28,146 @@ export function Projects() {
       </h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {projects.map((project, index) => (
-          <ProjectCard key={index} project={project} />
+          <ProjectCard 
+            key={index} 
+            project={project} 
+            index={index}
+            isActive={activeCard === index}
+            setActiveCard={setActiveCard}
+          />
         ))}
       </div>
     </section>
   )
 }
 
-function ProjectCard({ project }: { project: any }) {
+function ProjectCard({ 
+  project, 
+  index, 
+  isActive, 
+  setActiveCard 
+}: { 
+  project: any
+  index: number
+  isActive: boolean
+  setActiveCard: (index: number | null) => void
+}) {
   const cardRef = useRef<HTMLDivElement>(null)
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
+  const [mousePos, setMousePos] = useState({ x: 0.5, y: 0.5 })
   const [isHovered, setIsHovered] = useState(false)
+  const [isTouchDevice, setIsTouchDevice] = useState(false)
+  const [isDragging, setIsDragging] = useState(false)
   const { t } = useTranslation()
 
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!cardRef.current || !isHovered) return
+    // Detect touch device
+    setIsTouchDevice('ontouchstart' in window)
+  }, [])
+
+  useEffect(() => {
+    const handleMove = (e: MouseEvent | TouchEvent) => {
+      if (!cardRef.current || (!isHovered && !isActive)) return
       
       const rect = cardRef.current.getBoundingClientRect()
-      const x = (e.clientX - rect.left) / rect.width
-      const y = (e.clientY - rect.top) / rect.height
+      let clientX: number, clientY: number
       
-      setMousePos({ x, y })
+      if (e.type === 'touchmove') {
+        const touch = (e as TouchEvent).touches[0]
+        clientX = touch.clientX
+        clientY = touch.clientY
+        if (isActive) {
+          setIsDragging(true)
+        }
+      } else {
+        clientX = (e as MouseEvent).clientX
+        clientY = (e as MouseEvent).clientY
+      }
+      
+      const x = (clientX - rect.left) / rect.width
+      const y = (clientY - rect.top) / rect.height
+      
+      setMousePos({ x: Math.max(0, Math.min(1, x)), y: Math.max(0, Math.min(1, y)) })
     }
 
-    window.addEventListener('mousemove', handleMouseMove)
-    return () => window.removeEventListener('mousemove', handleMouseMove)
-  }, [isHovered])
+    const handleTouchEnd = () => {
+      if (isActive && !isDragging) {
+        setMousePos({ x: 0.5, y: 0.5 })
+      }
+      setTimeout(() => setIsDragging(false), 100)
+    }
 
-  const handleMouseEnter = () => setIsHovered(true)
-  const handleMouseLeave = () => {
-    setIsHovered(false)
-    setMousePos({ x: 0.5, y: 0.5 })
+    if (isTouchDevice) {
+      window.addEventListener('touchmove', handleMove, { passive: true })
+      window.addEventListener('touchend', handleTouchEnd, { passive: true })
+    } else {
+      window.addEventListener('mousemove', handleMove)
+    }
+
+    return () => {
+      if (isTouchDevice) {
+        window.removeEventListener('touchmove', handleMove)
+        window.removeEventListener('touchend', handleTouchEnd)
+      } else {
+        window.removeEventListener('mousemove', handleMove)
+      }
+    }
+  }, [isHovered, isActive, isTouchDevice, isDragging])
+
+  const handleMouseEnter = () => {
+    if (!isTouchDevice) {
+      setIsHovered(true)
+    }
   }
 
-  const rotateX = isHovered ? (mousePos.y - 0.5) * -20 : 0
-  const rotateY = isHovered ? (mousePos.x - 0.5) * 20 : 0
+  const handleMouseLeave = () => {
+    if (!isTouchDevice) {
+      setIsHovered(false)
+      setMousePos({ x: 0.5, y: 0.5 })
+    }
+  }
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setIsDragging(false)
+    
+    if (!isActive) {
+      setActiveCard(index)
+      const touch = e.touches[0]
+      const rect = cardRef.current?.getBoundingClientRect()
+      if (rect) {
+        const x = (touch.clientX - rect.left) / rect.width
+        const y = (touch.clientY - rect.top) / rect.height
+        setMousePos({ x: Math.max(0, Math.min(1, x)), y: Math.max(0, Math.min(1, y)) })
+      }
+    }
+  }
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (isActive && !isDragging) {
+      // Only deactivate on tap (not drag)
+      setActiveCard(null)
+      setMousePos({ x: 0.5, y: 0.5 })
+    }
+  }
+
+  const handleClick = (e: React.MouseEvent) => {
+    if (isTouchDevice) {
+      e.preventDefault()
+    }
+  }
+
+  const isInteracting = isHovered || isActive
+  const rotateX = isInteracting ? (mousePos.y - 0.5) * -20 : 0
+  const rotateY = isInteracting ? (mousePos.x - 0.5) * 20 : 0
 
   return (
     <div
       ref={cardRef}
-      className="pokemon-card-wrapper"
+      className={`pokemon-card-wrapper ${isActive ? 'card-active' : ''}`}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+      onClick={handleClick}
       style={{
         '--mouse-x': mousePos.x,
         '--mouse-y': mousePos.y,
