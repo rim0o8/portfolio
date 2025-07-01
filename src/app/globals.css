@@ -281,10 +281,12 @@
 
 /* Pokemon Card Styles */
 .pokemon-card-wrapper {
-  perspective: 1000px;
+  perspective: 1200px;
   position: relative;
-  transition: transform 0.1s ease-out;
-  contain: layout style;
+  transition: transform 0.15s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  contain: layout style paint;
+  isolation: isolate;
+  transform-style: preserve-3d;
 }
 
 .pokemon-card {
@@ -294,30 +296,42 @@
   border-radius: 1rem;
   overflow: hidden;
   background: linear-gradient(135deg, #1a1a2e 0%, #0f0f1e 50%, #1a1a2e 100%);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
   transform-style: preserve-3d;
-  transform: rotateX(var(--rotate-x)) rotateY(var(--rotate-y));
-  transition: transform 0.1s ease-out, box-shadow 0.3s ease;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  will-change: transform;
+  transform: rotateX(var(--rotate-x)) rotateY(var(--rotate-y)) translateZ(0);
+  transition: 
+    transform 0.15s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    box-shadow 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   backface-visibility: hidden;
+  contain: layout style paint;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
 }
 
 .dark .pokemon-card {
   background: linear-gradient(135deg, #0a0a0f 0%, #151521 50%, #0a0a0f 100%);
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .pokemon-card-wrapper:hover .pokemon-card {
-  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.25);
+  box-shadow: 
+    0 25px 50px rgba(0, 0, 0, 0.25),
+    0 0 20px rgba(255, 255, 255, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 .dark .pokemon-card-wrapper:hover .pokemon-card {
-  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7);
+  box-shadow: 
+    0 25px 50px rgba(0, 0, 0, 0.6),
+    0 0 15px rgba(255, 255, 255, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
-/* Holographic shine effect */
+/* Subtle holographic shine effect */
 .card-shine {
   position: absolute;
   top: 0;
@@ -326,63 +340,50 @@
   bottom: 0;
   background: 
     linear-gradient(
-      105deg,
-      transparent 25%,
-      rgba(255, 100, 255, 0.15) 30%,
-      rgba(255, 100, 255, 0.3) 32%,
-      rgba(100, 255, 255, 0.4) 36%,
-      rgba(255, 255, 100, 0.6) 40%,
-      rgba(100, 255, 100, 0.4) 44%,
-      rgba(255, 100, 100, 0.3) 48%,
-      rgba(100, 100, 255, 0.15) 52%,
-      transparent 55%
-    ),
-    repeating-linear-gradient(
-      45deg,
-      transparent,
-      transparent 2px,
-      rgba(255, 255, 255, 0.1) 2px,
-      rgba(255, 255, 255, 0.1) 4px
+      calc(var(--shine-position) * 2 + 135deg),
+      transparent 40%,
+      rgba(120, 119, 198, 0.3) 47%,
+      rgba(255, 255, 255, 0.4) 50%,
+      rgba(255, 229, 119, 0.3) 53%,
+      transparent 60%
     );
-  filter: brightness(1.5) contrast(1.2);
-  mix-blend-mode: screen;
+  background-size: 300% 300%;
+  mix-blend-mode: color-dodge;
   opacity: 0;
-  transform: translateX(-100%);
-  transition: opacity 0.3s ease, transform 0s;
+  transition: opacity 0.6s ease;
   pointer-events: none;
-  z-index: 2;
+  z-index: 4;
+  will-change: opacity;
 }
 
 .pokemon-card-wrapper:hover .card-shine {
-  opacity: 1;
-  transform: translateX(calc((var(--mouse-x) - 0.5) * 200%));
-  transition: opacity 0.3s ease, transform 0.1s ease-out;
+  opacity: 0.75;
 }
 
-/* Glare effect */
+/* Subtle foil glare effect */
 .card-glare {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: radial-gradient(
-    circle at calc(var(--mouse-x) * 100%) calc(var(--mouse-y) * 100%),
-    rgba(255, 255, 255, 0.5) 0%,
-    rgba(255, 255, 255, 0.2) 25%,
-    rgba(255, 255, 255, 0.1) 40%,
-    transparent 50%
-  );
-  mix-blend-mode: soft-light;
+  background: 
+    radial-gradient(
+      600px circle at calc(var(--mouse-x) * 100%) calc(var(--mouse-y) * 100%),
+      rgba(255, 255, 255, 0.4) 0%,
+      rgba(255, 255, 255, 0.2) 40%,
+      rgba(255, 255, 255, 0.1) 50%,
+      transparent 60%
+    );
+  mix-blend-mode: overlay;
   opacity: 0;
   transition: opacity 0.3s ease;
   pointer-events: none;
-  z-index: 3;
+  z-index: 5;
+  will-change: opacity;
 }
 
-.pokemon-card-wrapper:hover .card-glare {
-  opacity: 0.8;
-}
+/* Glare opacity controlled by CSS variable */
 
 /* Card content styling */
 .card-content {
@@ -449,6 +450,10 @@
   color: #f0f0f0;
   line-height: 1.4;
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
 }
 
 .dark .card-title {
@@ -462,6 +467,10 @@
   line-height: 1.6;
   margin-bottom: 1.5rem;
   flex: 1;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
 }
 
 .dark .card-description {
@@ -480,6 +489,10 @@
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.2);
   color: #f0f0f0;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
 }
 
 .card-button:hover {
@@ -489,19 +502,7 @@
   border-color: rgba(255, 255, 255, 0.3);
 }
 
-/* Holographic rainbow effect on hover */
-@keyframes holographic {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
+/* Holographic rainbow pattern */
 .pokemon-card::before {
   content: '';
   position: absolute;
@@ -509,30 +510,44 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(
-    45deg,
-    #ff006e,
-    #ff4500,
-    #ffb700,
-    #00ff88,
-    #00b4ff,
-    #8b00ff,
-    #ff0099,
-    #ff006e
-  );
-  background-size: 400% 400%;
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(255, 119, 198, 0.03) 2px,
+      rgba(255, 119, 198, 0.03) 3px,
+      transparent 3px,
+      transparent 9px
+    ),
+    repeating-linear-gradient(
+      133deg,
+      transparent,
+      transparent 2px,
+      rgba(119, 198, 255, 0.03) 2px,
+      rgba(119, 198, 255, 0.03) 3px,
+      transparent 3px,
+      transparent 9px
+    ),
+    repeating-linear-gradient(
+      67deg,
+      transparent,
+      transparent 2px,
+      rgba(198, 255, 119, 0.03) 2px,
+      rgba(198, 255, 119, 0.03) 3px,
+      transparent 3px,
+      transparent 9px
+    );
   border-radius: 1rem;
   opacity: 0;
-  transition: opacity 0.3s ease;
-  animation: holographic 4s ease infinite;
-  z-index: 0;
-  filter: blur(5px);
-  transform: translateZ(0);
+  transition: opacity 0.5s ease;
+  z-index: 1;
+  mix-blend-mode: multiply;
   will-change: opacity;
 }
 
 .pokemon-card-wrapper:hover .pokemon-card::before {
-  opacity: 0.4;
+  opacity: 1;
 }
 
 /* Sparkle effects */
@@ -557,9 +572,17 @@
     opacity: 0;
     transform: scale(0) rotate(0deg) translateZ(0);
   }
+  25% {
+    opacity: 0.5;
+    transform: scale(0.8) rotate(90deg) translateZ(0);
+  }
   50% {
     opacity: 1;
     transform: scale(1) rotate(180deg) translateZ(0);
+  }
+  75% {
+    opacity: 0.7;
+    transform: scale(0.9) rotate(270deg) translateZ(0);
   }
 }
 
@@ -569,10 +592,11 @@
   height: 4px;
   left: var(--sparkle-x);
   top: var(--sparkle-y);
-  animation: sparkle 3s ease-in-out infinite;
+  animation: sparkle 3s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite;
   animation-delay: var(--sparkle-delay);
   will-change: transform, opacity;
   transform: translateZ(0);
+  contain: layout style;
 }
 
 .sparkle::before {
@@ -580,15 +604,19 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 4px;
-  height: 4px;
-  background: white;
+  width: 3px;
+  height: 3px;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(255, 255, 255, 0.6) 50%,
+    transparent 100%
+  );
   border-radius: 50%;
   transform: translate(-50%, -50%);
   box-shadow: 
-    0 0 6px rgba(255, 255, 255, 0.8),
-    0 0 12px rgba(255, 255, 255, 0.6),
-    0 0 20px rgba(255, 255, 255, 0.4);
+    0 0 4px rgba(255, 255, 255, 0.6),
+    0 0 8px rgba(255, 255, 255, 0.3);
 }
 
 .sparkle::after {
@@ -596,28 +624,32 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 20px;
-  height: 20px;
+  width: 12px;
+  height: 12px;
   transform: translate(-50%, -50%);
   background: 
-    linear-gradient(0deg, transparent 45%, rgba(255, 255, 255, 0.8) 50%, transparent 55%),
-    linear-gradient(90deg, transparent 45%, rgba(255, 255, 255, 0.8) 50%, transparent 55%);
-}
-
-/* Extra shimmer layer */
-.pokemon-card-wrapper:hover .pokemon-card {
-  background-image: 
-    linear-gradient(135deg, #1a1a2e 0%, #0f0f1e 50%, #1a1a2e 100%),
-    repeating-linear-gradient(
-      -45deg,
-      transparent,
-      transparent 5px,
-      rgba(255, 255, 255, 0.02) 5px,
-      rgba(255, 255, 255, 0.02) 10px
+    linear-gradient(
+      0deg, 
+      transparent 45%, 
+      rgba(255, 255, 255, 0.6) 49%, 
+      rgba(255, 255, 255, 0.8) 50%, 
+      rgba(255, 255, 255, 0.6) 51%, 
+      transparent 55%
+    ),
+    linear-gradient(
+      90deg, 
+      transparent 45%, 
+      rgba(255, 255, 255, 0.6) 49%, 
+      rgba(255, 255, 255, 0.8) 50%, 
+      rgba(255, 255, 255, 0.6) 51%, 
+      transparent 55%
     );
+  filter: blur(0.2px);
 }
 
-/* Glitter texture overlay - optimized */
+/* Removed heavy shimmer layer for performance */
+
+/* Subtle foil texture */
 .pokemon-card::after {
   content: '';
   position: absolute;
@@ -625,20 +657,35 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-image: 
-    radial-gradient(circle at 20% 30%, rgba(255,255,255,0.8) 0%, transparent 2%),
-    radial-gradient(circle at 60% 70%, rgba(255,255,255,0.8) 0%, transparent 2%);
-  background-size: 50px 50px;
+  background-image:
+    radial-gradient(
+      ellipse at center,
+      transparent 20%,
+      rgba(255, 255, 255, 0.2) 50%,
+      rgba(120, 119, 198, 0.1) 70%,
+      transparent 100%
+    );
+  background-size: 200% 100%;
+  background-position: calc((var(--mouse-x) - 0.5) * 100%) center;
   opacity: 0;
   transition: opacity 0.3s ease;
-  mix-blend-mode: screen;
+  mix-blend-mode: color-dodge;
   transform: translateZ(0);
   z-index: 3;
   pointer-events: none;
+  will-change: opacity, background-position;
 }
 
 .pokemon-card-wrapper:hover .pokemon-card::after {
   opacity: 0.4;
+}
+
+.card-active .pokemon-card::after {
+  opacity: 0.6 !important;
+}
+
+.pokemon-card-wrapper:hover .card-glare {
+  opacity: calc(var(--glare-opacity) * 0.6);
 }
 
 /* Mobile touch styles */
@@ -665,16 +712,9 @@
   opacity: 1 !important;
 }
 
+/* Simplified active card background */
 .card-active .pokemon-card {
-  background-image: 
-    linear-gradient(135deg, #1a1a2e 0%, #0f0f1e 50%, #1a1a2e 100%),
-    repeating-linear-gradient(
-      -45deg,
-      transparent,
-      transparent 5px,
-      rgba(255, 255, 255, 0.02) 5px,
-      rgba(255, 255, 255, 0.02) 10px
-    ) !important;
+  background: linear-gradient(135deg, #1a1a2e 0%, #0f0f1e 50%, #1a1a2e 100%) !important;
 }
 
 .card-active {
@@ -685,8 +725,10 @@
 /* Visual indicator for active card */
 .card-active .pokemon-card {
   box-shadow: 
-    0 30px 60px rgba(0, 0, 0, 0.4),
-    0 0 0 2px rgba(255, 255, 255, 0.2);
+    0 30px 60px rgba(0, 0, 0, 0.35),
+    0 0 25px rgba(255, 255, 255, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  transform: rotateX(var(--rotate-x)) rotateY(var(--rotate-y)) translateZ(15px);
 }
 
 /* Tap indicator for mobile */

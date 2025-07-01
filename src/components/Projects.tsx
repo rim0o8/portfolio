@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Brain, ExternalLink, Github } from 'lucide-react'
 import Image from 'next/image'
 import { useTranslation } from 'react-i18next'
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 export function Projects() {
   const { t } = useTranslation()
@@ -57,6 +57,8 @@ function ProjectCard({
   const [isHovered, setIsHovered] = useState(false)
   const [isTouchDevice, setIsTouchDevice] = useState(false)
   const [isDragging, setIsDragging] = useState(false)
+  const animationFrameRef = useRef<number>()
+  const lastUpdateTime = useRef(0)
   const { t } = useTranslation()
 
   useEffect(() => {
@@ -64,9 +66,18 @@ function ProjectCard({
     setIsTouchDevice('ontouchstart' in window)
   }, [])
 
-  useEffect(() => {
-    const handleMove = (e: MouseEvent | TouchEvent) => {
-      if (!cardRef.current || (!isHovered && !isActive)) return
+  const handleMove = useCallback((e: MouseEvent | TouchEvent) => {
+    if (!cardRef.current || (!isHovered && !isActive)) return
+    
+    const now = performance.now()
+    if (now - lastUpdateTime.current < 16) return // Throttle to ~60fps
+    
+    if (animationFrameRef.current) {
+      cancelAnimationFrame(animationFrameRef.current)
+    }
+    
+    animationFrameRef.current = requestAnimationFrame(() => {
+      if (!cardRef.current) return
       
       const rect = cardRef.current.getBoundingClientRect()
       let clientX: number, clientY: number
@@ -83,35 +94,47 @@ function ProjectCard({
         clientY = (e as MouseEvent).clientY
       }
       
-      const x = (clientX - rect.left) / rect.width
-      const y = (clientY - rect.top) / rect.height
+      // More precise coordinate calculation
+      const x = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width))
+      const y = Math.max(0, Math.min(1, (clientY - rect.top) / rect.height))
       
-      setMousePos({ x: Math.max(0, Math.min(1, x)), y: Math.max(0, Math.min(1, y)) })
-    }
+      setMousePos({ x, y })
+      lastUpdateTime.current = now
+    })
+  }, [isHovered, isActive])
 
-    const handleTouchEnd = () => {
-      if (isActive && !isDragging) {
-        setMousePos({ x: 0.5, y: 0.5 })
-      }
-      setTimeout(() => setIsDragging(false), 100)
+  const handleGlobalTouchEnd = useCallback(() => {
+    if (isActive && !isDragging) {
+      setMousePos({ x: 0.5, y: 0.5 })
     }
+    setTimeout(() => setIsDragging(false), 100)
+  }, [isActive, isDragging])
 
+  useEffect(() => {
+    if (!isHovered && !isActive) return
+    
+    const options = { passive: true }
+    
     if (isTouchDevice) {
-      window.addEventListener('touchmove', handleMove, { passive: true })
-      window.addEventListener('touchend', handleTouchEnd, { passive: true })
+      window.addEventListener('touchmove', handleMove, options)
+      window.addEventListener('touchend', handleGlobalTouchEnd, options)
     } else {
-      window.addEventListener('mousemove', handleMove)
+      window.addEventListener('mousemove', handleMove, options)
     }
 
     return () => {
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current)
+      }
+      
       if (isTouchDevice) {
         window.removeEventListener('touchmove', handleMove)
-        window.removeEventListener('touchend', handleTouchEnd)
+        window.removeEventListener('touchend', handleGlobalTouchEnd)
       } else {
         window.removeEventListener('mousemove', handleMove)
       }
     }
-  }, [isHovered, isActive, isTouchDevice, isDragging])
+  }, [isHovered, isActive, isTouchDevice, handleMove, handleGlobalTouchEnd])
 
   const handleMouseEnter = () => {
     if (!isTouchDevice) {
@@ -155,9 +178,20 @@ function ProjectCard({
     }
   }
 
-  const isInteracting = isHovered || isActive
-  const rotateX = isInteracting ? (mousePos.y - 0.5) * -20 : 0
-  const rotateY = isInteracting ? (mousePos.x - 0.5) * 20 : 0
+  const { isInteracting, rotateX, rotateY, glareOpacity, shinePosition } = useMemo(() => {
+    const interacting = isHovered || isActive
+    const centerX = mousePos.x - 0.5
+    const centerY = mousePos.y - 0.5
+    const distance = Math.sqrt(centerX * centerX + centerY * centerY)
+    
+    return {
+      isInteracting: interacting,
+      rotateX: interacting ? centerY * -15 : 0,
+      rotateY: interacting ? centerX * 15 : 0,
+      glareOpacity: interacting ? Math.min(0.8, distance * 1.5) : 0,
+      shinePosition: interacting ? mousePos.x * 100 : 50,
+    }
+  }, [isHovered, isActive, mousePos.x, mousePos.y])
 
   return (
     <div
@@ -173,20 +207,24 @@ function ProjectCard({
         '--mouse-y': mousePos.y,
         '--rotate-x': `${rotateX}deg`,
         '--rotate-y': `${rotateY}deg`,
+        '--glare-opacity': glareOpacity,
+        '--shine-position': `${shinePosition}%`,
       } as React.CSSProperties}
     >
       <div className="pokemon-card">
         <div className="card-shine" />
         <div className="card-glare" />
-        <div className="card-sparkles">
-          {[...Array(8)].map((_, i) => (
-            <div key={i} className="sparkle" style={{
-              '--sparkle-delay': `${i * 0.4}s`,
-              '--sparkle-x': `${(i * 37) % 100}%`,
-              '--sparkle-y': `${(i * 23 + 10) % 100}%`,
-            } as React.CSSProperties} />
-          ))}
-        </div>
+        {isInteracting && (
+          <div className="card-sparkles">
+            {[...Array(3)].map((_, i) => (
+              <div key={i} className="sparkle" style={{
+                '--sparkle-delay': `${i * 0.8}s`,
+                '--sparkle-x': `${(i * 35 + mousePos.x * 10) % 100}%`,
+                '--sparkle-y': `${(i * 25 + mousePos.y * 8 + 15) % 100}%`,
+              } as React.CSSProperties} />
+            ))}
+          </div>
+        )}
         
         <div className="card-content">
           {project.image ? (

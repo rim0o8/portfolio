@@ -3,7 +3,10 @@
     "allow": [
       "Bash(grep:*)",
       "WebFetch(domain:github.com)",
-      "WebFetch(domain:raw.githubusercontent.com)"
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:poke-holo.simey.me)",
+      "Bash(npm run dev:*)",
+      "Bash(curl:*)"
     ],
     "deny": []
   }
